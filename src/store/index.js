@@ -45,10 +45,7 @@ const actions = {
 
 // getters are functions
 const getters = {
-  getImages: (state) => {
-    console.log(state)
-    return state.images
-  },
+  getImages: state => state.images,
 }
 
 // A Vuex instance is created by combining the state, mutations, actions,

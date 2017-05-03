@@ -1,11 +1,14 @@
 <template>
   <div id="dashboard">
     <md-layout md-gutter>
-      <tagging-image
-       v-for="image in images"
-       :key="image.imageId"
-       :image="image"
-       />
+      <template v-for="image in images">
+        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25">
+          <tagging-image       
+          :key="image.imageId"
+          :image="image"
+          />
+        </md-layout>
+       </template>
     </md-layout>
       <button @click="reloadImages">Reload</button>
   </div>
@@ -31,11 +34,6 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  padding: 10px;
 }
 </style>
