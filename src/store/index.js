@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import MockApi from '@/utils/mockApi'
-import { readFileToString } from '@/utils/helpers'
 
 Vue.use(Vuex)
 
@@ -64,12 +63,9 @@ const actions = {
       file,
     }
     commit('addFileToQueue', fileObject)
-    const fileContents = await readFileToString(file)
-    const response = await Vue.http.post('images', fileContents, {
-      headers: {
-        'X-Filename': file.name,
-        'Content-Type': file.type,
-      },
+    const formData = new FormData()
+    formData.append('picture', file)
+    const response = await Vue.http.post('images', formData, {
       progress(e) {
         if (e.lengthComputable) {
           commit('setUploadProgress', fileObject, e.loaded)
