@@ -12,6 +12,7 @@
     "lint:fix": "eslint --fix --ext .js,.vue src"
   },
   "dependencies": {
+    "dropzone": "^4.3.0",
     "vue": "^2.2.2",
     "vue-material": "^0.7.1",
     "vue-moment": "^2.0.2",

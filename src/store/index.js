@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import MockApi from '@/utils/mockApi'
+import { readFileToString } from '@/utils/helpers'
 
 Vue.use(Vuex)
 
@@ -7,6 +9,7 @@ Vue.use(Vuex)
 // each Vuex instance is just a single state tree.
 const initalState = {
   images: [],
+  uploadQueue: [],
 }
 
 // mutations are operations that actually mutates the state.
@@ -20,10 +23,20 @@ const mutations = {
     Vue.set(state, 'images', images)
   },
   addImage(state, image) {
-    state.image.push(image)
+    state.images.push(image)
   },
   deleteImage(state, imageId) {
     state.images = state.filter(value => imageId === value.imageId)
+  },
+  addFileToQueue(state, file) {
+    state.uploadQueue.push(file)
+  },
+  removeFileFromQueue(state, file) {
+    const index = state.uploadQueue.findIndex(e => e === file)
+    state.uploadQueue.splice(index, 1)
+  },
+  setUploadProgress(state, file, progress) {
+    Vue.set(file, 'progress', progress)
   },
 }
 /* eslint-enable no-param-reassign */
@@ -34,12 +47,38 @@ const actions = {
   //   console.log(this)
   // },
   async reloadImages({ commit }) {
-    const imageResponse = await Vue.http.get('images')
-    commit('setImages', imageResponse.body)
+    let imageResponse
+    if (window.localStorage.mockApi && process.env.NODE_ENV !== 'production') {
+      imageResponse = MockApi.images
+    } else {
+      imageResponse = (await Vue.http.get('images')).body
+    }
+    commit('setImages', imageResponse)
   },
   async deleteImage({ commit }, imageId) {
     await Vue.http.delete('images')
     commit('deleteImage', imageId)
+  },
+  async uploadImage({ commit }, file) {
+    const fileObject = {
+      file,
+    }
+    commit('addFileToQueue', fileObject)
+    const fileContents = await readFileToString(file)
+    const response = await Vue.http.post('images', fileContents, {
+      headers: {
+        'X-Filename': file.name,
+        'Content-Type': file.type,
+      },
+      progress(e) {
+        if (e.lengthComputable) {
+          commit('setUploadProgress', fileObject, e.loaded)
+          console.log('e.loaded: %o, e.total: %o, percent: %o', e.loaded, e.total, (e.loaded / e.total) * 100)
+        }
+      },
+    })
+    commit('removeFileFromQueue', fileObject)
+    commit('addImage', response.body)
   },
 }
 
@@ -51,7 +90,7 @@ const getters = {
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
 export default new Vuex.Store({
-  initalState,
+  state: initalState,
   getters,
   actions,
   mutations,
