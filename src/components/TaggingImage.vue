@@ -1,15 +1,14 @@
 <template>
   <md-card md-with-hover class="tagging-image-container">
-    <md-card-media class="overlay-container">
-      <md-image :md-src="image.url"></md-image>
-      <div v-for="pred in predictionOverlays" class="pred-overlay" v-bind:style="pred.style" v-on:mouseover="setSelectedPrediction(pred.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'pred-overlay-selected':pred.predictionId === selectedPredictionId}">{{pred.text}}</div>
-    </md-card-media>
+    
 
     <md-card-header>
       <div class="md-title">Title goes here</div>
       <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
     </md-card-header>
-
+    <md-card-actions>
+      <md-button>Delete</md-button>
+    </md-card-actions>
     <md-card-content>
       <div v-for="prediction in image.predictions" class="prediction-chip md-chip md-theme-default" v-on:mouseover="setSelectedPrediction(prediction.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'prediction-chip-selected':prediction.predictionId === selectedPredictionId}">
         {{prediction.category}}
@@ -17,10 +16,13 @@
       <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
       <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
     </md-card-content>
+    <md-card-media class="overlay-container">
+      <md-image :md-src="image.url"></md-image>
+      <div v-for="pred in predictionOverlays" class="pred-overlay" v-bind:style="pred.style" v-on:mouseover="setSelectedPrediction(pred.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'pred-overlay-selected':pred.predictionId === selectedPredictionId}">{{pred.text}}</div>
+    </md-card-media>
     
-    <md-card-actions>
-      <md-button>Delete</md-button>
-    </md-card-actions>
+    
+    
 
   </md-card>
 </template>

@@ -47,7 +47,7 @@ const actions = {
   // },
   async reloadImages({ commit }) {
     let imageResponse
-    if (window.localStorage.mockApi && process.env.NODE_ENV !== 'production') {
+    if (window.localStorage.mockApi === 'true' && process.env.NODE_ENV !== 'production') {
       imageResponse = MockApi.images
     } else {
       imageResponse = (await Vue.http.get('images')).body

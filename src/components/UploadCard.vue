@@ -4,7 +4,7 @@
     <md-icon class="md-primary md-size-4x">file_upload</md-icon>
     <div>Drop files / Click here to upload</div>  
  </div>
-  <input class="filedialog-input" type="file" multiple @change="onFileChange" ref="fileinput" accept="image/*">
+  <input class="filedialog-input" type="file" multiple @change="onFileChange" ref="fileinput" accept="image/jpeg, image/png">
  </md-card>
 </template>
 
