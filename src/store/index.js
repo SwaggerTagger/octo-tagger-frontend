@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import MockApi from '@/utils/mockApi'
+import Poller from '@/utils/poller'
 
 Vue.use(Vuex)
 
@@ -9,6 +10,14 @@ Vue.use(Vuex)
 const initalState = {
   images: [],
   uploadQueue: [],
+  pollingInterval: 5,
+}
+const imagePoller = Poller()
+
+// getters are functions
+const getters = {
+  getImages: state => state.images,
+  getPollingInterval: state => state.pollingInterval,
 }
 
 // mutations are operations that actually mutates the state.
@@ -37,7 +46,11 @@ const mutations = {
   setUploadProgress(state, file, progress) {
     Vue.set(file, 'progress', progress)
   },
+  setPollingInterval(state, seconds) {
+    state.pollingInterval = seconds
+  },
 }
+
 /* eslint-enable no-param-reassign */
 // actions are functions that causes side effects and can involve
 // asynchronous operations.
@@ -50,7 +63,9 @@ const actions = {
     if (window.localStorage.mockApi === 'true' && process.env.NODE_ENV !== 'production') {
       imageResponse = MockApi.images
     } else {
-      imageResponse = (await Vue.http.get('images')).body
+      const response = await Vue.http.get('images')
+      console.log(response)
+      imageResponse = MockApi.images
     }
     commit('setImages', imageResponse)
   },
@@ -76,12 +91,14 @@ const actions = {
     commit('removeFileFromQueue', fileObject)
     commit('addImage', response.body)
   },
+  startPolling({ state, dispatch }) {
+    console.log('Polling started')
+    imagePoller.startPolling(getters.getPollingInterval(state) * 1000, () => {
+      dispatch('reloadImages')
+    })
+  },
 }
 
-// getters are functions
-const getters = {
-  getImages: state => state.images,
-}
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.

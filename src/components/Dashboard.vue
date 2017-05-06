@@ -24,16 +24,20 @@ import TaggingImage from './TaggingImage'
 import UploadCard from './UploadCard'
 
 export default {
-  name: 'app',
+  name: 'dashboard',
   computed: mapGetters({
     images: 'getImages',
   }),
   methods: mapActions([
     'reloadImages',
+    'startPolling',
   ]),
   components: {
     'tagging-image': TaggingImage,
     UploadCard,
+  },
+  mounted() {
+    // this.startPolling()
   },
 }
 </script>
