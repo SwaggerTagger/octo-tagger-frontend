@@ -2,7 +2,7 @@
   <div class="fullScreenForm">
     <div class="black-bg"></div>
     <video poster="../assets/yolo.png" id="background-yolo" playsinline autoplay muted loop>
-      <source src="../assets/yolo.webm" type="video/webm"></source>
+      <source src="../assets/yolo2.webm" type="video/webm"></source>
     </video>
     <div class="aligned">
       <md-whiteframe elevation="2" class="aligned-item">
