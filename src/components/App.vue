@@ -6,7 +6,12 @@
         <md-icon>menu</md-icon>
       </md-button>
       -->
-      <h2 class="md-title" style="flex: 1">Octo-Tagger</h2>
+      <h2 class="md-title" style="flex: 1">
+        <router-link class="yolo-title" to="/">
+          <span class="sp-yolo">yolo</span>
+          <span class="sp-tagger">tagger</span>
+        </router-link>
+      </h2>
 
       <md-button class="md-icon-button" id="open-settings" @click.native="openSettings">
         <md-icon>settings</md-icon>
@@ -49,5 +54,19 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Pacifico|VT323');
 
+.sp-yolo {
+  font-family: 'Pacifico', cursive;
+  font-size:1.3em;
+}
+
+.sp-tagger {
+  font-family: 'VT323', monospace;
+  font-size:1.2em;
+}
+
+.yolo-title {
+  color:white !important;
+}
 </style>

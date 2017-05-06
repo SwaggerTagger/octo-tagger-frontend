@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    
+    <router-view></router-view>
     <md-layout md-gutter>
       <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25">
         <upload-card/>

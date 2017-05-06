@@ -20,6 +20,7 @@ const imagePoller = Poller()
 const getters = {
   getImages: state => state.images,
   getPollingInterval: state => state.pollingInterval,
+  getImage : (state, uuid) => state.images.find(x => x.imageId == uuid)
 }
 
 // mutations are operations that actually mutates the state.
