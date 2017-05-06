@@ -1,9 +1,7 @@
 <template>
-  <md-card md-with-hover class="tagging-image-container">
-    
-
+  <md-card class="tagging-image-container">
     <md-card-header>
-      <div class="md-title">Title goes here</div>
+      <div class="md-title">{{image.filename}}</div>
       <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
     </md-card-header>
     <md-card-actions>
@@ -17,13 +15,9 @@
       <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
     </md-card-content>
     <md-card-media class="overlay-container">
-      <md-image :md-src="image.url"></md-image>
+      <img :src="image.url"/>
       <div v-for="pred in predictionOverlays" class="pred-overlay" v-bind:style="pred.style" v-on:mouseover="setSelectedPrediction(pred.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'pred-overlay-selected':pred.predictionId === selectedPredictionId}">{{pred.text}}</div>
     </md-card-media>
-    
-    
-    
-
   </md-card>
 </template>
 

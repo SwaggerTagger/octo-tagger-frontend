@@ -14,7 +14,6 @@
         </md-layout>
        </template>
     </md-layout>
-      <button @click="reloadImages">Reload</button>
   </div>
 </template>
 
@@ -29,7 +28,6 @@ export default {
     images: 'getImages',
   }),
   methods: mapActions([
-    'reloadImages',
     'startPolling',
   ]),
   components: {
@@ -37,7 +35,7 @@ export default {
     UploadCard,
   },
   mounted() {
-    // this.startPolling()
+    this.startPolling()
   },
 }
 </script>

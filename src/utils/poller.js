@@ -3,11 +3,11 @@ export default (callback) => {
   let timeoutHandle
   return {
     cancelPolling() {
-      clearTimeout(timeoutHandle)
+      clearInterval(timeoutHandle)
     },
     startPolling(interval, cb = callback) {
-      clearTimeout(timeoutHandle)
-      setTimeout(cb, interval)
+      clearInterval(timeoutHandle)
+      timeoutHandle = setInterval(cb, interval)
     },
   }
 }

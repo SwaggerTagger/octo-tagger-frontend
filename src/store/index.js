@@ -64,8 +64,7 @@ const actions = {
       imageResponse = MockApi.images
     } else {
       const response = await Vue.http.get('images')
-      console.log(response)
-      imageResponse = MockApi.images
+      imageResponse = response.body
     }
     commit('setImages', imageResponse)
   },
@@ -90,6 +89,10 @@ const actions = {
     })
     commit('removeFileFromQueue', fileObject)
     commit('addImage', response.body)
+  },
+  setPollingInterval({ commit, dispatch }, seconds) {
+    commit('setPollingInterval', seconds)
+    dispatch('startPolling')
   },
   startPolling({ state, dispatch }) {
     console.log('Polling started')
