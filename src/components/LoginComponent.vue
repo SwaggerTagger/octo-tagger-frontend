@@ -3,14 +3,15 @@
     <form novalidate @submit.stop.prevent="submit">
       <md-input-container>
         <label>E-Mail</label>
-        <md-input type="email" required></md-input>
+        <md-input v-model="email" type="email" required></md-input>
       </md-input-container>
   
       <md-input-container md-has-password>
         <label>Password</label>
-        <md-input required type="password"></md-input>
+        <md-input v-model="password" required type="password"></md-input>
       </md-input-container>
-      <md-button class="md-primary md-raised">Login</md-button>
+      <md-button @click.native="doLogin" 
+        class="md-primary md-raised">Login</md-button>
       <md-switch class="md-accent" v-model="rememberMe" name="remember-me"><i>remember me</i></md-switch>
     </form>
     </md-whiteframe>
@@ -19,9 +20,12 @@
 
 <script>
 import VideoDialog from './VideoDialog'
+import { mapGetters, mapActions } from 'vuex'
 
-var state = { 
+var formState = { 
   "rememberMe": true,
+  "email": "",
+  "password": "",
   "title": "Login",
   "loginButtons": [
     {
@@ -37,10 +41,19 @@ var state = {
 
 export default {
   name: 'login-component',
-  data: function () {
-    return state;
-  },
-  components: { VideoDialog }
+  components: { VideoDialog },
+  data: () => formState,
+  methods: {
+    ...mapActions([ 'login' ]),
+
+    doLogin() {
+      console.log("yewp");
+      this.login({
+        "email": this.$data.email,
+        "password": this.$data.password
+      });
+    },
+  }
 }
 </script>
 

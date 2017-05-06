@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import MockApi from '@/utils/mockApi'
 import Poller from '@/utils/poller'
+import ApiActions from '@/utils/api'
 
 Vue.use(Vuex)
 
@@ -11,6 +12,7 @@ const initalState = {
   images: [],
   uploadQueue: [],
   pollingInterval: 5,
+  loggedIn: false,
 }
 const imagePoller = Poller()
 
@@ -100,6 +102,7 @@ const actions = {
       dispatch('reloadImages')
     })
   },
+  ...ApiActions,
 }
 
 
