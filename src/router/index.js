@@ -18,7 +18,8 @@ export default new Router({
         {
           path: 'view/:id',
           component: FullScreenComponent,
-          name: 'FullScreenComponent'
+          name: 'FullScreenComponent',
+          props: true
         }
       ]
     },

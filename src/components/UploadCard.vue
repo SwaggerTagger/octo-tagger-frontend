@@ -1,11 +1,11 @@
 <template>
- <md-card class="upload-card tagging-image-container" >
- <div class="dropzone" @drop="handleDrop($event)" @dragover="handleDrag($event)" @dragend="handleDragEnd($event)" @click="openFileDialog">
-    <md-icon class="md-primary md-size-4x">file_upload</md-icon>
-    <div>Drop files / Click here to upload</div>  
- </div>
-  <input class="filedialog-input" type="file" multiple @change="onFileChange" ref="fileinput" accept="image/jpeg, image/png">
- </md-card>
+  <md-card md-with-hover class="upload-card tagging-image-container">
+    <div class="dropzone" @drop="handleDrop($event)" @dragover="handleDrag($event)" @dragend="handleDragEnd($event)" @click="openFileDialog">
+      <md-icon class="md-size-4x">file_upload</md-icon>
+      <div>Drop files / Click here to upload</div>
+    </div>
+    <input class="filedialog-input" type="file" multiple @change="onFileChange" ref="fileinput" accept="image/jpeg, image/png">
+  </md-card>
 </template>
 
 <script>
@@ -55,7 +55,7 @@ export default {
       }
     },
     handleDrag(ev) {
-        // Prevent default select and drag behavior
+      // Prevent default select and drag behavior
       ev.preventDefault()
     },
     handleDragEnd(ev) {
@@ -84,16 +84,23 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 5px;
-  height:100%;
+  height: 100%;
+  background-color: #3f51b5;
+  color: rgba(255, 255, 255, .87);
+  font-family: 'VT323', monospace;
+  font-size: 1.2em;
 }
+
 .dropzone i {
   margin: initial;
 }
+
 .filedialog-input {
   display: none;
   width: 0px;
   height: 0px;
 }
+
 .upload-card {
   width: 100%;
 }
