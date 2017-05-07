@@ -112,6 +112,10 @@ const actions = {
       dispatch('reloadImages')
     })
   },
+  stopPolling({state}) {
+    console.log('Polling stopped')
+    imagePoller.cancelPolling()
+  },
   ...ApiActions,
 }
 
