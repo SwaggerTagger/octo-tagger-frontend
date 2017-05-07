@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import MockApi from '@/utils/mockApi'
 import Poller from '@/utils/poller'
+import { ApiMutations, ApiActions } from '@/utils/api'
 
 Vue.use(Vuex)
 
@@ -11,6 +12,15 @@ const initalState = {
   images: [],
   uploadQueue: [],
   pollingInterval: 5,
+  loggedIn: {
+    is: false,
+    token: null,
+    reason: null
+  },
+  registered: {
+    is: false,
+    reason: null
+  }
 }
 const imagePoller = Poller()
 
@@ -18,6 +28,7 @@ const imagePoller = Poller()
 const getters = {
   getImages: state => state.images,
   getPollingInterval: state => state.pollingInterval,
+  getImage : (state, uuid) => state.images.find(x => x.imageId == uuid)
 }
 
 // mutations are operations that actually mutates the state.
@@ -50,6 +61,7 @@ const mutations = {
   setPollingInterval(state, seconds) {
     state.pollingInterval = seconds
   },
+  ...ApiMutations,
 }
 
 /* eslint-enable no-param-reassign */
@@ -101,6 +113,7 @@ const actions = {
       dispatch('reloadImages')
     })
   },
+  ...ApiActions,
 }
 
 

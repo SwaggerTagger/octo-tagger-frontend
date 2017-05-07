@@ -30,6 +30,7 @@ export function readFileToString(f) {
     }
   })
 }
+
 export const statusStringMap = {
   CLASSIFICATION_STARTING: 'Classifying...',
   CLASSIFICATION_FAILED_INVALID_INPUT: 'Error during classification',
@@ -48,5 +49,16 @@ export function getImageStatus(image) {
     return 'Classifying...'
   }
   return 'Classified'
+}
+
+
+export function jWTInterceptor(request, next) {
+  request.headers['x-auth-token'] = localStorage.getItem('jwt')
+  next(response => {
+    let jwt = response.headers.get('x-auth-token')
+    if (jwt) {
+      localStorage.setItem('jwt', jwt)
+    }
+  });
 }
 
