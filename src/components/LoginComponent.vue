@@ -1,8 +1,10 @@
 <template>
   <video-dialog :title="title" :buttons="loginButtons">
-    <div class="md-accent login-failed" v-if="isUnauthorized">login failed.</div>
-    <div class="md-accent login-failed" v-if="isPreconditionFailed">validate your email!!</div>
-    <router-view></router-view>
+    <transition name="component-fade" mode="out-in">
+      <div class="md-accent login-failed" v-if="isUnauthorized">login failed.</div>
+      <div class="md-accent login-failed" v-if="isPreconditionFailed">validate your email!!</div>
+      <router-view></router-view>
+    </transition>
     <form @keyup.enter="doLogin" novalidate @submit.stop.prevent="submit">
       <md-input-container>
         <label>E-Mail</label>
@@ -96,5 +98,13 @@ form {
   width: 300px;
   padding: 10px;
   background-color: white;
+}
+
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+/* .component-fade-leave-active for <2.1.8 */ {
+  opacity: 0;
 }
 </style>
