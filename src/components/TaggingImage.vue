@@ -1,42 +1,62 @@
 <template>
-  <md-card class="tagging-image-container">
-    <md-card-header>
-      <div class="md-title">{{image.filename}}</div>
-      <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
-    </md-card-header>
-    <md-card-actions>
-      <md-button>Delete</md-button>
-    </md-card-actions>
-    <md-card-content>
-      <div v-for="prediction in image.predictions" class="prediction-chip md-chip md-theme-default" v-on:mouseover="setSelectedPrediction(prediction.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'prediction-chip-selected':prediction.predictionId === selectedPredictionId}">
-        {{prediction.category}}
+    
+      <md-card class="tagging-image-container">
+      <md-card-media>
+      <aspect-ratio>
+      <div class="overlay-container" :style="{ backgroundImage: 'url(' + image.url + ')' }">
+        <div class="status-overlay" v-if="!image.classificationDuration" >
+          <h3>{{getImageStatus(image)}}</h3>
+          <md-progress md-indeterminate></md-progress>
+        </div>
+        
       </div>
-      <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
-      <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
-    </md-card-content>
-    <md-card-media class="overlay-container">
-      <img :src="image.url"/>
-      <div v-for="pred in predictionOverlays" class="pred-overlay" v-bind:style="pred.style" v-on:mouseover="setSelectedPrediction(pred.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'pred-overlay-selected':pred.predictionId === selectedPredictionId}">{{pred.text}}</div>
+      <img slot="img" src="../assets/aspect_ratio_hack.png"/>
+    </aspect-ratio>
     </md-card-media>
-  </md-card>
+      <md-card-header>
+        <div class="md-title">{{image.filename}}</div>
+        <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
+      </md-card-header>
+      <md-card-content v-if="image.predictions" class="buffer">
+        <div v-for="prediction in image.predictions" class="prediction-chip md-chip md-theme-default" v-on:mouseover="setSelectedPrediction(prediction.predictionId)" v-on:mouseout="setSelectedPrediction(null)" v-bind:class="{'prediction-chip-selected':prediction.predictionId === selectedPredictionId}">
+          {{prediction.category}}
+        </div>
+        <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
+        <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
+      </md-card-content>
+      <div class="buffer"/>
+      <md-card-actions>
+        <md-button @click.native="deleteSelf">Delete</md-button>
+      </md-card-actions>
+      
+      
+    </md-card>
+    
 </template>
 
 <script>
-// import { mapGetters, mapActions } from 'vuex'
-import { convertToCssPercentage } from '@/utils/helpers'
+import { mapActions } from 'vuex'
+import { convertToCssPercentage, getImageStatus } from '@/utils/helpers'
+import AspectRatio from './AspectRatio'
 
 export default {
   name: 'tagging-image',
   props: {
     image: Object,
   },
+  components: { 'aspect-ratio': AspectRatio },
   data: () => ({
     selectedPredictionId: null,
   }),
   methods: {
+    ...mapActions(['deleteImage']),
+    deleteSelf() {
+      this.deleteImage(this.image.imageId)
+    },
     setSelectedPrediction(predictionId) {
       this.selectedPredictionId = predictionId
     },
+    getImageStatus,
   },
   computed: {
     predictionOverlays() {
@@ -60,27 +80,33 @@ export default {
 </script>
 
 <style>
-.pred-overlay {
+
+.status-overlay {
   position:absolute;
+  color:white;
+  top:0;
+  left:0;
   z-index:3;
-  color: green;
-  white-space: nowrap;
-  overflow-x: visible;
-  border: green;
-  border-style: solid;
-  opacity: 0.4;
-}
-.pred-overlay-selected {
-  opacity: 1;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(86, 86, 86, 0.6);
 }
 .overlay-container {
-  z-index:1;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size:cover;
 }
-.prediction-chip:hover, .prediction-chip-selected {
-    cursor: pointer;
-    box-shadow: 0 1px 5px rgba(0,0,0,.2), 0 2px 2px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12);
-}
+
 .tagging-image-container {
   margin: 5px;
+  display: flex;
+  flex-flow: column;
+}
+.buffer {
+  flex: 1;
 }
 </style>

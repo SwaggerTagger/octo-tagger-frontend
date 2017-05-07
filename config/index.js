@@ -30,7 +30,7 @@ module.exports = {
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '/api': {
-        target: 'http://localhost:9000/api',
+        target: 'http://tagger-backend.westeurope.cloudapp.azure.com/api',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

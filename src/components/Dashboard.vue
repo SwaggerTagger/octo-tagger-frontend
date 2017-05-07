@@ -1,12 +1,14 @@
 <template>
   <div id="dashboard">
+
     <router-view></router-view>
+    <template v-if="images.length > 0">
     <md-layout md-gutter>
-      <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25">
+      <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20">
         <upload-card/>
       </md-layout>
       <template v-for="image in images">
-        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25">
+        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20">
           <tagging-image       
           :key="image.imageId"
           :image="image"
@@ -14,6 +16,8 @@
         </md-layout>
        </template>
     </md-layout>
+    </template>
+    <upload-card v-else/>
   </div>
 </template>
 

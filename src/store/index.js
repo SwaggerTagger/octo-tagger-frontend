@@ -43,9 +43,10 @@ const mutations = {
   },
   addImage(state, image) {
     state.images.push(image)
+    state.images.sort((a, b) => (b.uploadedAt - a.uploadedAt))
   },
   deleteImage(state, imageId) {
-    state.images = state.filter(value => imageId === value.imageId)
+    state.images = state.images.filter(value => imageId === value.imageId)
   },
   addFileToQueue(state, file) {
     state.uploadQueue.push(file)
@@ -81,7 +82,7 @@ const actions = {
     commit('setImages', imageResponse)
   },
   async deleteImage({ commit }, imageId) {
-    await Vue.http.delete('images')
+    await Vue.http.delete(`images/${imageId}`)
     commit('deleteImage', imageId)
   },
   async uploadImage({ commit }, file) {
