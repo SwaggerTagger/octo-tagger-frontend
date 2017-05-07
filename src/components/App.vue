@@ -13,8 +13,13 @@
         </router-link>
       </h2>
 
+      <md-button class="md-icon-button" @click.native="doLogout">
+        <md-icon>exit_to_app</md-icon>
+        <md-tooltip md-delay="400" md-direction="bottom">Logout</md-tooltip>
+      </md-button>
       <md-button class="md-icon-button" id="open-settings" @click.native="openSettings">
         <md-icon>settings</md-icon>
+        <md-tooltip md-delay="400" md-direction="bottom">Settings</md-tooltip>
       </md-button>
     </md-toolbar>
     <!---
@@ -36,6 +41,7 @@
 
 <script>
 import Settings from './Settings'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'app',
@@ -46,6 +52,11 @@ export default {
     openSettings() {
       this.$refs.settingsDialog.open()
     },
+    doLogout() {
+      this.logout()
+      this.$router.push('/login')
+    },
+    ...mapActions(['logout']),
   },
   components: {
     settings: Settings,

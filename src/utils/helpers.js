@@ -30,3 +30,12 @@ export function readFileToString(f) {
     }
   })
 }
+export function jWTInterceptor(request, next) {
+  request.headers['x-auth-token'] = localStorage.getItem('jwt')
+  next(response => {
+    let jwt = response.headers.get('x-auth-token')
+    if (jwt) {
+      localStorage.setItem('jwt', jwt)
+    }
+  });
+}

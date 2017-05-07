@@ -1,6 +1,7 @@
 <template>
   <video-dialog :title="title" :buttons="loginButtons">
     <div class="md-accent login-failed" v-if="isUnauthorized">login failed.</div>
+    <div class="md-accent login-failed" v-if="isPreconditionFailed">validate your email!!</div>
     <form novalidate @submit.stop.prevent="submit">
       <md-input-container>
         <label>E-Mail</label>
@@ -58,6 +59,10 @@ export default {
     isUnauthorized() {
       return this.loggedIn.reason 
       && this.loggedIn.reason.status == 401;
+    },
+    isPreconditionFailed() {
+      return this.loggedIn.reason 
+      && this.loggedIn.reason.status == 412;
     },
     ...mapState([
       'loggedIn'

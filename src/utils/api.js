@@ -4,6 +4,16 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource)
 Vue.http.options.root = '/api'
 
+Vue.http.interceptors.push((request, next) => {
+  request.headers.set('x-auth-token', localStorage.getItem('jwt'))
+  next(response => {
+    let jwt = response.headers.get('x-auth-token')
+    if (jwt) {
+      localStorage.setItem('jwt', jwt)
+    }
+  });
+});
+
 export const ApiMutations = {
     setLogin(state, loginState) {
        state.loggedIn = loginState
@@ -22,6 +32,10 @@ export const ApiActions = {
       }, error => {
         commit('setLogin', {is: false, reason: error})
       });
+    },
+    async logout ( { commit } ) {
+      localStorage.removeItem('jwt')
+      commit('setLogin', {is: false, reason: null})
     },
     async register( { commit }, data ) {
       console.log(data);
