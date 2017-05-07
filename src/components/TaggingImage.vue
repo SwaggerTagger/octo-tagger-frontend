@@ -1,6 +1,7 @@
 <template>
-  <md-card @click.native="openFullScreen" md-with-hover class="tagging-image-container">
-    <md-card-media>
+  <md-card md-with-hover class="tagging-image-container">
+    <md-card-media-cover >
+    <md-card-media @click.native="openFullScreen">
       <aspect-ratio>
         <div class="overlay-container" :style="{ backgroundImage: 'url(' + image.url + ')' }">
           <div class="status-overlay" v-if="!image.classificationDuration">
@@ -12,22 +13,25 @@
         <img slot="img" src="../assets/aspect_ratio_hack.png" />
       </aspect-ratio>
     </md-card-media>
+    <md-card-area class="img-area">
     <md-card-header>
       <div class="md-title">{{image.filename}}</div>
       <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
+      <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
+      <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
     </md-card-header>
     <md-card-content v-if="image.predictions" class="buffer">
       <div v-for="prediction in image.predictions" class="prediction-chip md-chip md-theme-default">
         {{prediction.category}}
       </div>
-      <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
-      <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
     </md-card-content>
     <div class="buffer" />
     <md-card-actions>
       <md-button @click.native="deleteSelf">Delete</md-button>
     </md-card-actions>
+    </md-card-area>
   
+    </md-card-media-cover>
   </md-card>
 </template>
 
@@ -57,6 +61,14 @@ export default {
 </script>
 
 <style>
+.img-area {
+  background: rgba(0, 0,0,0.3);
+  font-family: 'VT323', monospace;
+}
+.prediction-chip {
+  background-color: #3f51b5 !important;
+  opacity: 0.8;
+}
 .status-overlay {
   position: absolute;
   color: white;
