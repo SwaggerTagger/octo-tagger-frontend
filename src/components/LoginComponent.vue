@@ -1,5 +1,6 @@
 <template>
   <video-dialog :title="title" :buttons="loginButtons">
+    <div class="md-accent login-failed" v-if="isUnauthorized">login failed.</div>
     <form novalidate @submit.stop.prevent="submit">
       <md-input-container>
         <label>E-Mail</label>
@@ -20,7 +21,7 @@
 
 <script>
 import VideoDialog from './VideoDialog'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapState } from 'vuex'
 
 var formState = { 
   "rememberMe": true,
@@ -47,17 +48,32 @@ export default {
     ...mapActions([ 'login' ]),
 
     doLogin() {
-      console.log("yewp");
       this.login({
-        "email": this.$data.email,
-        "password": this.$data.password
-      });
+        "email": formState.email,
+        "password": formState.password
+      })
     },
+  },
+  computed: {
+    isUnauthorized() {
+      return this.loggedIn.reason 
+      && this.loggedIn.reason.status == 401;
+    },
+    ...mapState([
+      'loggedIn'
+    ])
   }
 }
 </script>
 
 <style>
+.login-failed {
+  background: #e91e63;
+  padding-left: 15px;
+  letter-spacing: 4px;
+  font-family: 'VT323', monospace;
+  color:black;
+}
 form {
   width: 300px;
   padding: 10px;

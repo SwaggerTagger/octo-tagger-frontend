@@ -4,17 +4,33 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource)
 Vue.http.options.root = '/api'
 
-export default {
+export const ApiMutations = {
+    setLogin(state, loginState) {
+       state.loggedIn = loginState
+    },
+    setRegister(state, registerState) {
+        state.registered = registerState;
+    }
+}
+
+export const ApiActions = {
     async login( { commit }, credentials ) {
       Vue.http.post('/api/signIn', credentials)
 
       .then(success => {
-        console.log("ok");
-        console.log(success);
+        commit('setLogin', {is: true, reason: success});
       }, error => {
+        commit('setLogin', {is: false, reason: error})
+      });
+    },
+    async register( { commit }, data ) {
+      console.log(data);
+      Vue.http.post('/api/signUp', data)
 
-        console.log("nay");
-        console.log(error)
+      .then(success => {
+        commit('setRegister', {is: true, reason: success});
+      }, error => {
+        commit('setRegister', {is: false, reason: error})
       });
     }
 }
