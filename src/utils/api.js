@@ -24,7 +24,9 @@ export const ApiMutations = {
 }
 
 export const ApiActions = {
-    async login( { commit }, credentials ) {
+    async login( { commit, dispatch }, credentials ) {
+      await dispatch('logout')
+
       return new Promise(resolve => {
         Vue.http.post('/api/signIn', credentials)
 
@@ -50,5 +52,11 @@ export const ApiActions = {
       }, error => {
         commit('setRegister', {is: false, reason: error})
       });
+    },
+    async loadTokenFromCache({ commit }) {
+      let jwt = localStorage.getItem('jwt')
+      if (jwt) {
+        commit('setLogin', {is: true})
+      }
     }
 }

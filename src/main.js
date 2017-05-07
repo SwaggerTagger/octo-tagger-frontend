@@ -7,8 +7,6 @@ import App from './components/App'
 import router from './router'
 import store from './store'
 
-import JWTInterceptor from './utils/helpers'
-
 import 'vue-material/dist/vue-material.css'
 import './utils/api'
 
@@ -16,7 +14,6 @@ Vue.use(VueMaterial)
 Vue.use(VueMoment)
 
 Vue.config.productionTip = false
-Vue.http.interceptors.push(JWTInterceptor)
 
 /* eslint-disable no-new */
 new Vue({
