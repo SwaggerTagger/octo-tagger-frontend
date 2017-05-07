@@ -33,10 +33,15 @@ export default {
   }),
   methods: mapActions([
     'startPolling',
+    'stopPolling'
   ]),
   components: {
     'tagging-image': TaggingImage,
     UploadCard,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.stopPolling()
+    next()
   },
   mounted() {
     this.startPolling()

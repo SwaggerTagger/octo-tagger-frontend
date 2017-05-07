@@ -48,11 +48,13 @@ export default {
   methods: {
     ...mapActions([ 'login' ]),
 
-    doLogin() {
-      this.login({
+    async doLogin() {
+      if (await this.login({
         "email": formState.email,
         "password": formState.password
-      })
+      })) {
+        this.$router.push('/dashboard')
+      }
     },
   },
   computed: {
