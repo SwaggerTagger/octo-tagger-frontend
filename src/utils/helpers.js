@@ -30,3 +30,23 @@ export function readFileToString(f) {
     }
   })
 }
+export const statusStringMap = {
+  CLASSIFICATION_STARTING: 'Classifying...',
+  CLASSIFICATION_FAILED_INVALID_INPUT: 'Error during classification',
+  CLASSIFICATION_FAILED_DARKNET_FAILED: 'Error during classification',
+  CLASSIFICATION_FAILED_UNKNOWN: 'Error during classification',
+}
+
+export function getImageStatus(image) {
+  if (image.status) {
+    return statusStringMap[image.status]
+  }
+  if (!image.classificationStart) {
+    return 'In queue...'
+  }
+  if (!image.classificationDuration) {
+    return 'Classifying...'
+  }
+  return 'Classified'
+}
+
