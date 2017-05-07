@@ -25,13 +25,17 @@ export const ApiMutations = {
 
 export const ApiActions = {
     async login( { commit }, credentials ) {
-      Vue.http.post('/api/signIn', credentials)
+      return new Promise(resolve => {
+        Vue.http.post('/api/signIn', credentials)
 
-      .then(success => {
-        commit('setLogin', {is: true, reason: success});
-      }, error => {
-        commit('setLogin', {is: false, reason: error})
-      });
+        .then(success => {
+          commit('setLogin', {is: true, reason: success});
+          resolve(true)
+        }, error => {
+          commit('setLogin', {is: false, reason: error})
+          resolve(false)
+        })
+      })
     },
     async logout ( { commit } ) {
       localStorage.removeItem('jwt')
