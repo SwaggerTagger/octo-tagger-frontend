@@ -32,7 +32,7 @@ export default {
   }),
   methods: mapActions([
     'startPolling',
-    'stopPolling'
+    'stopPolling',
   ]),
   components: {
     'tagging-image': TaggingImage,

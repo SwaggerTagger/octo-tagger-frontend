@@ -19,9 +19,9 @@ export default new Router({
           path: 'view/:id',
           component: FullScreenComponent,
           name: 'FullScreenComponent',
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/login',
@@ -29,11 +29,11 @@ export default new Router({
       name: 'LoginComponent',
       children: [
         {
-        path: 'activated',
-        component: LoginActivated,
-        name: 'LoginActivated'
-        }
-      ]
+          path: 'activated',
+          component: LoginActivated,
+          name: 'LoginActivated',
+        },
+      ],
     },
     {
       path: '/register',

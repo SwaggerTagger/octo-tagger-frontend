@@ -34,13 +34,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import { convertToCssPercentage, getImageStatus } from '@/utils/helpers'
+import { convertToCssPercentage } from '@/utils/helpers'
 
 export default {
   name: 'fullscreen-image',
   props: {
-    image: Object
+    image: Object,
   },
   data: () => ({
     selectedPredictionId: null,

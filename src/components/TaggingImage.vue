@@ -52,7 +52,7 @@ export default {
       this.deleteImage(this.image.imageId)
     },
     openFullScreen() {
-      this.$router.push({ name: 'FullScreenComponent', 
+      this.$router.push({ name: 'FullScreenComponent',
         params: { image: this.image, id: this.image.imageId } })
     },
     getImageStatus,

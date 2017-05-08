@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import Settings from './Settings'
 import { mapActions, mapGetters } from 'vuex'
+import Settings from './Settings'
 
 export default {
   name: 'app',
@@ -65,7 +65,7 @@ export default {
       }
     },
     ...mapActions(['logout', 'loadTokenFromCache']),
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters(['isLoggedIn']),
   },
   mounted() {
     this.redirect()
@@ -74,7 +74,7 @@ export default {
     next(vm => vm.redirect())
   },
   updated() {
-    if (this.$route.path == "/") {
+    if (this.$route.path === '/') {
       this.redirect()
     }
   },

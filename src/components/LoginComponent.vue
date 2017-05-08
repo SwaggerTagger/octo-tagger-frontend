@@ -25,24 +25,23 @@
 
 <script>
 import VideoDialog from './VideoDialog'
-import LoginActivated from './LoginActivated'
 import { mapGetters, mapActions, mapState } from 'vuex'
 
-var formState = { 
+const formState = {
   rememberMe: true,
-  email: "",
-  password: "",
-  title: "Login",
+  email: '',
+  password: '',
+  title: 'Login',
   loginButtons: [
     {
-      text: "register",
-      to: "/register"
+      text: 'register',
+      to: '/register',
     },
     {
-      text: "cancel",
-      to: "/"
-    }
-  ]
+      text: 'cancel',
+      to: '/',
+    },
+  ],
 }
 
 export default {
@@ -50,12 +49,12 @@ export default {
   components: { VideoDialog },
   data: () => formState,
   methods: {
-    ...mapActions([ 'login' ]),
+    ...mapActions(['login']),
 
     async doLogin() {
       if (await this.login({
-        "email": formState.email,
-        "password": formState.password
+        email: formState.email,
+        password: formState.password,
       })) {
         this.$router.push('/dashboard')
       }
@@ -63,19 +62,19 @@ export default {
   },
   computed: {
     isUnauthorized() {
-      return this.loggedIn.reason 
+      return this.loggedIn.reason
       && (
         this.loggedIn.reason.status == 401
-        || this.loggedIn.reason.status == 403);
+        || this.loggedIn.reason.status == 403)
     },
     isPreconditionFailed() {
-      return this.loggedIn.reason 
-      && this.loggedIn.reason.status == 412;
+      return this.loggedIn.reason
+      && this.loggedIn.reason.status == 412
     },
     ...mapState([
-      'loggedIn'
-    ])
-  }
+      'loggedIn',
+    ]),
+  },
 }
 </script>
 

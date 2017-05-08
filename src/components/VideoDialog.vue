@@ -17,15 +17,15 @@
 </template>
 
 <script>
-var state = { "rememberMe": true }
+const state = { rememberMe: true }
 export default {
   name: 'video-dialog',
   props: [
     'title',
-    'buttons'
+    'buttons',
   ],
-  data: function () {
-    return state;
+  data() {
+    return state
   },
   methods: {
   },
