@@ -1,73 +1,140 @@
 <template>
-  <md-whiteframe md-elevation="5" class="full-screen-dialog">
-  <router-link to="/dashboard">
-    <md-button class="md-fab md-accent md-fab-top-right">
-        <md-icon class="white">close</md-icon>
-    </md-button>
-    </router-link>
-    <div class="aligned">
-      <div class="aligned-item">
-      <img src="http://placehold.it/650x450" alt="Classified Image"/>
-      </div>
-      <div class="aligned-item">
-      <div class="tags">
-        <md-chip>Person</md-chip>
-        <md-chip>Cat</md-chip>
-        <md-chip>lel</md-chip>
-      </div>
-      </div>
+  <div class="full-screen-component">
+    <div class="blur-overlay">
     </div>
-  </md-whiteframe>
+    <div class="valigner">
+      <md-whiteframe md-elevation="15" class="full-screen-dialog">
+        <router-link to="/dashboard">
+          <md-button class="md-fab md-accent md-fab-top-right">
+            <md-icon class="white">close</md-icon>
+          </md-button>
+        </router-link>
+        <div 
+          class="overlay-container">
+          <div class="overlay" 
+            :style="overlay.style"
+            v-for="overlay in predictionOverlays">
+            <span>{{overlay.text}}</span>
+          </div>
+        </div>
+        <img class="classified-image" 
+          ref="domImage"
+          :src="image.url" alt="Classified Image" />
+        <div class="aligned-item tags">
+          <md-chip v-on:mouseover="setSelectedPrediction(prediction.predictionId)" 
+          v-on:mouseout="setSelectedPrediction(null)" 
+          v-bind:class="{'prediction-chip-selected': prediction.predictionId === selectedPredictionId}" 
+          v-for="prediction in image.predictions" class="prediction-chip">
+            {{prediction.category}}
+          </md-chip>
+        </div>
+      </md-whiteframe>
+    </div>
+  </div>
 </template>
 
 <script>
+import { convertToCssPercentage } from '@/utils/helpers'
+
 export default {
   name: 'fullscreen-image',
-  data: function () {
+  props: {
+    image: Object,
   },
+  data: () => ({
+    selectedPredictionId: null,
+  }),
   methods: {
+    setSelectedPrediction(predictionId) {
+      this.selectedPredictionId = predictionId
+    },
+  },
+  mounted() {
+    console.log(this)
+  },
+  computed: {
+    predictionOverlays() {
+      if (this.image.predictions === undefined) {
+        return []
+      }
+      const { width, height } = this.image
+      return this.image.predictions.map((prediction) => {
+        const style = {
+          left: convertToCssPercentage(prediction.left / width),
+          top: convertToCssPercentage(prediction.top / height),
+          width: convertToCssPercentage((prediction.right - prediction.left) / width),
+          height: convertToCssPercentage((prediction.bottom - prediction.top) / height),
+        }
+        const text = `${prediction.category} (${prediction.probability})`
+        return { style, text, predictionId: prediction.predictionId }
+      })
+    },
   },
 }
 </script>
 
 <style>
+.blur-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 64px;
+  z-index: 90;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.5s;
+  animation: backdrop 1000ms;
+}
+
+.overlay {
+  position: absolute;
+  border: 1px solid green;
+}
+
+.overlay > span {
+  color:white;
+  text-shadow: 1px 1px black;
+  font-family: 'VT323', monospace;
+  margin-left:3px;
+}
+
+@keyframes backdrop {
+  0% {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  100% {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+.valigner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.classified-image {
+  max-height: calc(100vh - 150px);
+}
+
 div.full-screen-dialog {
-  position:fixed;
+  position: fixed;
   z-index: 100;
-  top: 80px;
-  bottom: 80px;
-  left:10px;
-  right: 10px;
-  background-color:white;
+  background: white;
 }
+
 .white {
-  color:white; 
+  color: white;
 }
+
 .aligned {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   height: calc(100vh - 64px);
-}
-
-.tags {
-  margin-top: 20px;
-}
-
-.black-bg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1000;
-  background: black;
-}
-
-.aligned-item {
-  max-width: 50%;
-  padding: 0px;
-  opacity: 0.8;
 }
 </style>

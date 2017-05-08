@@ -2,17 +2,17 @@
   <div id="app">
     <md-toolbar>
       <!---
-      <md-button @click.native="toggleSidenav" class="md-icon-button">
-        <md-icon>menu</md-icon>
-      </md-button>
-      -->
+        <md-button @click.native="toggleSidenav" class="md-icon-button">
+          <md-icon>menu</md-icon>
+        </md-button>
+        -->
       <h2 class="md-title" style="flex: 1">
-        <router-link class="yolo-title" to="/">
-          <span class="sp-yolo">yolo</span>
-          <span class="sp-tagger">tagger</span>
-        </router-link>
-      </h2>
-
+          <router-link class="yolo-title" to="/">
+            <span class="sp-yolo">yolo</span>
+            <span class="sp-tagger">tagger</span>
+          </router-link>
+        </h2>
+  
       <md-button class="md-icon-button" @click.native="doLogout">
         <md-icon>exit_to_app</md-icon>
         <md-tooltip md-delay="400" md-direction="bottom">Logout</md-tooltip>
@@ -23,25 +23,25 @@
       </md-button>
     </md-toolbar>
     <!---
-    <md-sidenav class="md-left" ref="sidenav">
-    <md-toolbar class="md-large">
-      <div class="md-toolbar-container">
-        <h3 class="md-title">Sidenav content</h3>
-      </div>
-    </md-toolbar>
-    <md-list>
-    <md-list-item><router-link to="settings">Settings</router-link></md-list-item>
-    </md-list>
-  </md-sidenav>
-  -->
-    <settings ref="settingsDialog"/>
+      <md-sidenav class="md-left" ref="sidenav">
+      <md-toolbar class="md-large">
+        <div class="md-toolbar-container">
+          <h3 class="md-title">Sidenav content</h3>
+        </div>
+      </md-toolbar>
+      <md-list>
+      <md-list-item><router-link to="settings">Settings</router-link></md-list-item>
+      </md-list>
+    </md-sidenav>
+    -->
+    <settings ref="settingsDialog" />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import Settings from './Settings'
-import { mapActions } from 'vuex'
 
 export default {
   name: 'app',
@@ -56,7 +56,27 @@ export default {
       this.logout()
       this.$router.push('/login')
     },
-    ...mapActions(['logout']),
+    async redirect() {
+      await this.loadTokenFromCache()
+      if (this.isLoggedIn()) {
+        this.$router.push('/dashboard')
+      } else {
+        this.$router.push('/login')
+      }
+    },
+    ...mapActions(['logout', 'loadTokenFromCache']),
+    ...mapGetters(['isLoggedIn']),
+  },
+  mounted() {
+    this.redirect()
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => vm.redirect())
+  },
+  updated() {
+    if (this.$route.path === '/') {
+      this.redirect()
+    }
   },
   components: {
     settings: Settings,
@@ -69,15 +89,15 @@ export default {
 
 .sp-yolo {
   font-family: 'Pacifico', cursive;
-  font-size:1.3em;
+  font-size: 1.3em;
 }
 
 .sp-tagger {
   font-family: 'VT323', monospace;
-  font-size:1.2em;
+  font-size: 1.2em;
 }
 
 .yolo-title {
-  color:white !important;
+  color: white !important;
 }
 </style>

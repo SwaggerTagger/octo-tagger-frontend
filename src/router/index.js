@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/components/Dashboard'
 import LoginComponent from '@/components/LoginComponent'
+import LoginActivated from '@/components/LoginActivated'
 import FullScreenComponent from '@/components/FullScreenComponent'
 import RegisterComponent from '@/components/RegisterComponent'
 
@@ -17,14 +18,22 @@ export default new Router({
         {
           path: 'view/:id',
           component: FullScreenComponent,
-          name: 'FullScreenComponent'
-        }
-      ]
+          name: 'FullScreenComponent',
+          props: true,
+        },
+      ],
     },
     {
       path: '/login',
       component: LoginComponent,
       name: 'LoginComponent',
+      children: [
+        {
+          path: 'activated',
+          component: LoginActivated,
+          name: 'LoginActivated',
+        },
+      ],
     },
     {
       path: '/register',

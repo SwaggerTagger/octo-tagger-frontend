@@ -27,29 +27,29 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import VideoDialog from './VideoDialog'
-import { mapGetters, mapActions, mapState } from 'vuex'
 
-var formState = {
-  email: "",
-  password: "",
-  firstName: "",
-  lastName: "",
+const formState = {
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: '',
 }
 
-var state = {
+const state = {
   ...formState,
-  title: "Register",
+  title: 'Register',
   loginButtons: [
     {
-      text: "login",
-      to: "/login",
+      text: 'login',
+      to: '/login',
     },
     {
-      text: "cancel",
-      to: "/",
-    }
-  ]
+      text: 'cancel',
+      to: '/',
+    },
+  ],
 }
 
 export default {
@@ -59,32 +59,32 @@ export default {
     ...mapActions(['register']),
 
     doRegister() {
-      this.register({ 
-        email: state.email, 
+      this.register({
+        email: state.email,
         password: state.password,
-        firstName: state.firstName, 
-        lastName: state.lastName });
+        firstName: state.firstName,
+        lastName: state.lastName })
     },
   },
   computed: {
     isUnauthorized() {
-      return this.registered.reason 
-      && this.registered.reason.status == 500;
+      return this.registered.reason
+      && this.registered.reason.status == 500
     },
     isRegisterSuccessful() {
-      return this.registered.reason 
-      && this.registered.reason.status == 200;
+      return this.registered.reason
+      && this.registered.reason.status == 200
     },
     registerMessage() {
-      return this.registered.reason? 
+      return this.registered.reason ?
         JSON.parse(this.registered.reason.bodyText).info
-        : ""
+        : ''
     },
     ...mapState([
-      'registered'
-    ])
+      'registered',
+    ]),
   },
-  components: { VideoDialog }
+  components: { VideoDialog },
 }
 </script>
 

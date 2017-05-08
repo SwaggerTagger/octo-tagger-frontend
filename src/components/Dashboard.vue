@@ -1,7 +1,6 @@
 <template>
   <div id="dashboard">
-
-    <router-view></router-view>
+      <router-view></router-view>
     <template v-if="images.length > 0">
     <md-layout md-gutter>
       <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20">
@@ -33,7 +32,7 @@ export default {
   }),
   methods: mapActions([
     'startPolling',
-    'stopPolling'
+    'stopPolling',
   ]),
   components: {
     'tagging-image': TaggingImage,
@@ -81,4 +80,5 @@ export default {
     transform: rotate(359deg);
   }
 }
+
 </style>
