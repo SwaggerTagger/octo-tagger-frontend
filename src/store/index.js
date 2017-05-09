@@ -28,8 +28,9 @@ const imagePoller = Poller()
 const getters = {
   getImages: state => state.images,
   getPollingInterval: state => state.pollingInterval,
-  getImage: (state, uuid) => state.images.find(x => x.imageId == uuid),
+  getImage: (state, uuid) => state.images.find(x => x.imageId === uuid),
   isLoggedIn: state => state.loggedIn.is,
+  getUploadQueue: state => state.uploadQueue,
 }
 
 // mutations are operations that actually mutates the state.
@@ -56,11 +57,17 @@ const mutations = {
     const index = state.uploadQueue.findIndex(e => e === file)
     state.uploadQueue.splice(index, 1)
   },
-  setUploadProgress(state, file, progress) {
+  setUploadProgress(state, { file, progress }) {
     Vue.set(file, 'progress', progress)
+  },
+  setUploadRequest(state, { file, request }) {
+    file.request = request
   },
   setPollingInterval(state, seconds) {
     state.pollingInterval = seconds
+  },
+  setUploadDataUrl(state, { file, dataUri }) {
+    Vue.set(file, 'dataUrl', dataUri)
   },
   ...ApiMutations,
 }
@@ -86,23 +93,53 @@ const actions = {
     await Vue.http.delete(`images/${imageId}`)
     commit('deleteImage', imageId)
   },
-  async uploadImage({ commit }, file) {
+  readFile({ commit }, file) {
+    const fileReader = new FileReader()
+    fileReader.onload = function (fileLoadedEvent) {
+      commit('setUploadDataUrl', { file, dataUri: fileLoadedEvent.target.result })
+    }
+    console.log(file)
+    fileReader.readAsDataURL(file.file)
+  },
+  async uploadImage({ commit, dispatch }, file) {
     const fileObject = {
       file,
+      id: Math.floor(Math.random() * 5000),
     }
     commit('addFileToQueue', fileObject)
+    dispatch('readFile', fileObject)
     const formData = new FormData()
     formData.append('picture', file)
-    const response = await Vue.http.post('images', formData, {
-      progress(e) {
-        if (e.lengthComputable) {
-          commit('setUploadProgress', fileObject, e.loaded)
-          console.log('e.loaded: %o, e.total: %o, percent: %o', e.loaded, e.total, (e.loaded / e.total) * 100)
-        }
-      },
-    })
-    commit('removeFileFromQueue', fileObject)
-    commit('addImage', response.body)
+    try {
+      const response = await Vue.http.post('images', formData, {
+          // use before callback
+        before(request) {
+          commit('setUploadRequest', { file: fileObject, request })
+        },
+        progress(e) {
+          if (e.lengthComputable) {
+            commit('setUploadProgress', { file: fileObject, progress: e.loaded })
+            console.log('e.loaded: %o, e.total: %o, percent: %o', e.loaded, e.total, (e.loaded / e.total) * 100)
+          }
+        },
+      })
+      commit('removeFileFromQueue', fileObject)
+      commit('addImage', response.body)
+    } catch (e) {
+      if (e.status !== 0) {
+        console.log(e)
+      }
+    }
+  },
+  cancelUpload({ commit }, file) {
+    if (file.request) {
+      try {
+        file.request.abort()
+        commit('removeFileFromQueue', file)
+      } catch (e) {
+        console.log(e)
+      }
+    }
   },
   setPollingInterval({ commit, dispatch }, seconds) {
     commit('setPollingInterval', seconds)

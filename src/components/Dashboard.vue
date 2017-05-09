@@ -1,11 +1,19 @@
 <template>
   <div id="dashboard">
       <router-view></router-view>
-    <template v-if="images.length > 0">
+    <template v-if="images.length > 0 || uploadQueue.length > 0">
     <md-layout md-gutter>
       <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20">
         <upload-card/>
       </md-layout>
+      <template v-for="file in uploadQueue">
+          <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20">
+            <uploading-file       
+            :key="file.id"
+            :file="file"
+            />
+        </md-layout>
+      </template>
       <template v-for="image in images">
         <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20">
           <tagging-image       
@@ -24,11 +32,13 @@
 import { mapGetters, mapActions } from 'vuex'
 import TaggingImage from './TaggingImage'
 import UploadCard from './UploadCard'
+import UploadingFile from './UploadingFile'
 
 export default {
   name: 'dashboard',
   computed: mapGetters({
     images: 'getImages',
+    uploadQueue: 'getUploadQueue',
   }),
   methods: mapActions([
     'startPolling',
@@ -38,6 +48,7 @@ export default {
   components: {
     'tagging-image': TaggingImage,
     UploadCard,
+    UploadingFile,
   },
   beforeRouteLeave(to, from, next) {
     this.stopPolling()
