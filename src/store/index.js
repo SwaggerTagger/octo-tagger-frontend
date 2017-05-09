@@ -47,7 +47,7 @@ const mutations = {
     state.images.sort((a, b) => (b.uploadedAt - a.uploadedAt))
   },
   deleteImage(state, imageId) {
-    state.images = state.images.filter(value => imageId === value.imageId)
+    state.images = state.images.filter(value => imageId !== value.imageId)
   },
   addFileToQueue(state, file) {
     state.uploadQueue.push(file)
