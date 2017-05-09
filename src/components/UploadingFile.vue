@@ -28,8 +28,8 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { humanReadableFileSize } from '@/utils/helpers'
 import AspectRatio from './AspectRatio'
-import { getImageStatus, humanReadableFileSize } from '@/utils/helpers'
 
 export default {
   name: 'uploading-image',
@@ -44,12 +44,12 @@ export default {
     ...mapActions(['cancelUpload']),
   },
   computed: {
-    humanFileSize () {
+    humanFileSize() {
       return humanReadableFileSize(this.file.file.size)
     },
-    progress () {
+    progress() {
       return Math.round((this.file.progress / this.file.file.size) * 100)
     },
-  }
+  },
 }
 </script>

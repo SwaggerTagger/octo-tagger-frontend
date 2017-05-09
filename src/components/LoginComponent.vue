@@ -24,8 +24,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import VideoDialog from './VideoDialog'
-import { mapGetters, mapActions, mapState } from 'vuex'
 
 const formState = {
   rememberMe: true,
@@ -64,12 +64,12 @@ export default {
     isUnauthorized() {
       return this.loggedIn.reason
       && (
-        this.loggedIn.reason.status == 401
-        || this.loggedIn.reason.status == 403)
+        this.loggedIn.reason.status === 401
+        || this.loggedIn.reason.status === 403)
     },
     isPreconditionFailed() {
       return this.loggedIn.reason
-      && this.loggedIn.reason.status == 412
+      && this.loggedIn.reason.status === 412
     },
     ...mapState([
       'loggedIn',

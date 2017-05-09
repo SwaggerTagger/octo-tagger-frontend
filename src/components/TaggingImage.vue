@@ -37,8 +37,8 @@
 
 <script>
 import { mapActions } from 'vuex'
-import AspectRatio from './AspectRatio'
 import { getImageStatus } from '@/utils/helpers'
+import AspectRatio from './AspectRatio'
 
 export default {
   name: 'tagging-image',

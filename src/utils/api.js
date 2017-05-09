@@ -13,7 +13,7 @@ Vue.http.interceptors.push((request, next) => {
     }
   })
 })
-
+/* eslint-disable no-param-reassign */
 export const ApiMutations = {
   setLogin(state, loginState) {
     state.loggedIn = loginState
@@ -22,7 +22,7 @@ export const ApiMutations = {
     state.registered = registerState
   },
 }
-
+/* eslint-enable no-param-reassign */
 export const ApiActions = {
   async login({ commit, dispatch }, credentials) {
     await dispatch('logout')

@@ -69,11 +69,11 @@ export default {
   computed: {
     isUnauthorized() {
       return this.registered.reason
-      && this.registered.reason.status == 500
+      && this.registered.reason.status === 500
     },
     isRegisterSuccessful() {
       return this.registered.reason
-      && this.registered.reason.status == 200
+      && this.registered.reason.status === 200
     },
     registerMessage() {
       return this.registered.reason ?
