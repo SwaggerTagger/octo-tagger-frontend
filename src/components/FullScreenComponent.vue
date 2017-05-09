@@ -1,11 +1,11 @@
 <template>
   <div class="full-screen-component">
-    <div class="blur-overlay">
+    <div class="blur-overlay" @click="closeDialog">
     </div>
     <div class="valigner">
-      <md-whiteframe md-elevation="15" class="full-screen-dialog">
+      <md-whiteframe @click.native="handleDialogClick" md-elevation="15" class="full-screen-dialog">
         <router-link to="/dashboard">
-          <md-button class="md-fab md-accent md-fab-top-right">
+          <md-button ref="closeLink" class="md-fab md-accent md-fab-top-right">
             <md-icon class="white">close</md-icon>
           </md-button>
         </router-link>
@@ -20,14 +20,7 @@
         <img class="classified-image" 
           ref="domImage"
           :src="image.url" alt="Classified Image" />
-        <div class="aligned-item tags">
-          <md-chip v-on:mouseover="setSelectedPrediction(prediction.predictionId)" 
-          v-on:mouseout="setSelectedPrediction(null)" 
-          v-bind:class="{'prediction-chip-selected': prediction.predictionId === selectedPredictionId}" 
-          v-for="prediction in image.predictions" class="prediction-chip">
-            {{prediction.category}}
-          </md-chip>
-        </div>
+        
       </md-whiteframe>
     </div>
   </div>
@@ -48,9 +41,24 @@ export default {
     setSelectedPrediction(predictionId) {
       this.selectedPredictionId = predictionId
     },
+    handleDialogClick(event){
+      event.stopPropagation()
+    },
+    closeDialog(){
+      console.log('thisw')
+
+      this.$refs.closeLink.$el.click()
+    }
   },
   mounted() {
-    console.log(this)
+    // this.$nextTick(function() {
+    //   console.log('adding')
+    //   window.addEventListener('click',this.closeDialog)
+    // })
+  },
+  beforeDestroy() {
+    // console.log('destroying')
+    // window.removeEventListener('click', this.closeDialog);
   },
   computed: {
     predictionOverlays() {
@@ -80,7 +88,7 @@ export default {
   right: 0;
   bottom: 0;
   top: 64px;
-  z-index: 90;
+  z-index: 4;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.5s;
@@ -122,7 +130,7 @@ export default {
 
 div.full-screen-dialog {
   position: fixed;
-  z-index: 100;
+  z-index: 5;
   background: white;
 }
 

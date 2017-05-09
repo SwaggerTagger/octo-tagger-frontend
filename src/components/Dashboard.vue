@@ -33,6 +33,7 @@ export default {
   methods: mapActions([
     'startPolling',
     'stopPolling',
+    'reloadImages',
   ]),
   components: {
     'tagging-image': TaggingImage,
@@ -43,6 +44,7 @@ export default {
     next()
   },
   mounted() {
+    this.reloadImages()
     this.startPolling()
   },
 }
