@@ -18,13 +18,13 @@
       <div class="md-title">{{image.filename}}</div>
       <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
       <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
-      <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration }}</div>
+      <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration / 1000 }}s</div>
     </md-card-header>
-    <md-card-content v-if="image.predictions" class="buffer">
+    <div v-if="image.predictions" class="buffer">
       <div v-for="prediction in image.predictions" class="prediction-chip md-chip md-theme-default">
         {{prediction.category}}
       </div>
-    </md-card-content>
+    </div>
     <div class="buffer" />
     <md-card-actions>
       <md-button @click.native="deleteSelf">Delete</md-button>
@@ -68,13 +68,13 @@ export default {
 .prediction-chip {
   background-color: #3f51b5 !important;
   opacity: 0.8;
+  margin-left: 2px;
 }
 .status-overlay {
   position: absolute;
   color: white;
   top: 0;
   left: 0;
-  z-index: 3;
   height: 100%;
   width: 100%;
   display: flex;
