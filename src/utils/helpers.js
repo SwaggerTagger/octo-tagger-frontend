@@ -50,3 +50,16 @@ export function getImageStatus(image) {
   }
   return 'Classified'
 }
+
+export function humanReadableFileSize(bytes) {
+  let size = bytes
+  if (size < 1000) {
+    return `${size}B`
+  }
+  size /= 1000
+  if (size < 1000) {
+    return `${size}KB`
+  }
+  size = Math.round(size) / 1000
+  return `${size}MB`
+}
