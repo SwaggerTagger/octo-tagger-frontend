@@ -22,7 +22,6 @@ export default {
     ...mapActions(['uploadImage']),
     onFileChange(event) {
       const { target } = event
-      console.log(event.target.files)
       const filelist = target.files
       for (let i = 0; i < filelist.length; i++) {
         this.uploadImage(filelist[i])
@@ -33,7 +32,6 @@ export default {
       this.$refs.fileinput.click()
     },
     handleDrop(ev) {
-      console.log('Drop')
       ev.preventDefault()
       // If dropped items aren't files, reject them
       const dt = ev.dataTransfer
@@ -43,14 +41,12 @@ export default {
           if (dt.items[i].kind === 'file') {
             const f = dt.items[i].getAsFile()
             this.uploadImage(f)
-            console.log(`... file[${i}].name = ${f.name}`)
           }
         }
       } else {
         // Use DataTransfer interface to access the file(s)
         for (let i = 0; i < dt.files.length; i++) {
           this.uploadImage(dt.files[i])
-          console.log(`... file[${i}].name = ${dt.files[i].name}`)
         }
       }
     },
@@ -59,7 +55,6 @@ export default {
       ev.preventDefault()
     },
     handleDragEnd(ev) {
-      console.log('dragEnd')
       // Remove all of the drag data
       const dt = ev.dataTransfer
       if (dt.items) {

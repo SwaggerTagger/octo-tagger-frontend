@@ -9,27 +9,6 @@ export function randomString(length) {
   }
   return text
 }
-export function readFileToString(f) {
-  return new Promise((resolve, reject) => {
-    // Retrieve the first (and only!) File from the FileList object
-    if (f) {
-      const r = new FileReader()
-      r.onload = function (e) {
-        const contents = e.target.result
-        console.log(`${'Got the file.n'
-              + 'name: '}${f.name}n`
-              + `type: ${f.type}n`
-              + `size: ${f.size} bytesn`
-              + `starts with: ${contents.substr(1, contents.indexOf('n'))}`,
-        )
-        resolve(contents)
-      }
-      r.readAsText(f, 'UTF-8')
-    } else {
-      reject('Failed to load file')
-    }
-  })
-}
 
 export const statusStringMap = {
   CLASSIFICATION_STARTING: 'Classifying...',

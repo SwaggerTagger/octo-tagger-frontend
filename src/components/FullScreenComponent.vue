@@ -45,8 +45,6 @@ export default {
       event.stopPropagation()
     },
     closeDialog() {
-      console.log('thisw')
-
       this.$refs.closeLink.$el.click()
     },
   },

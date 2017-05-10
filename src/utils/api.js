@@ -44,7 +44,6 @@ export const ApiActions = {
     commit('setLogin', { is: false, reason: null })
   },
   async register({ commit }, data) {
-    console.log(data)
     Vue.http.post('/api/signUp', data)
 
       .then((success) => {

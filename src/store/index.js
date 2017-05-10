@@ -98,7 +98,6 @@ const actions = {
     fileReader.onload = function (fileLoadedEvent) {
       commit('setUploadDataUrl', { file, dataUri: fileLoadedEvent.target.result })
     }
-    console.log(file)
     fileReader.readAsDataURL(file.file)
   },
   async uploadImage({ commit, dispatch }, file) {
@@ -119,7 +118,6 @@ const actions = {
         progress(e) {
           if (e.lengthComputable) {
             commit('setUploadProgress', { file: fileObject, progress: e.loaded })
-            console.log('e.loaded: %o, e.total: %o, percent: %o', e.loaded, e.total, (e.loaded / e.total) * 100)
           }
         },
       })
