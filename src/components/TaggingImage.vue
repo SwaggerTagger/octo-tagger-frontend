@@ -1,7 +1,7 @@
 <template>
-  <md-card md-with-hover class="tagging-image-container">
+  <md-card md-with-hover class="tagging-image-container" @click.native="openFullScreen">
     <md-card-media-cover >
-    <md-card-media @click.native="openFullScreen">
+    <md-card-media>
       <aspect-ratio>
         <div class="overlay-container" :style="{ backgroundImage: 'url(' + image.url + ')' }">
           <div class="status-overlay" v-if="!image.classificationDuration">
@@ -37,8 +37,8 @@
 
 <script>
 import { mapActions } from 'vuex'
-import AspectRatio from './AspectRatio'
 import { getImageStatus } from '@/utils/helpers'
+import AspectRatio from './AspectRatio'
 
 export default {
   name: 'tagging-image',
@@ -48,7 +48,8 @@ export default {
   components: { 'aspect-ratio': AspectRatio },
   methods: {
     ...mapActions(['deleteImage']),
-    deleteSelf() {
+    deleteSelf(event) {
+      event.stopPropagation()
       this.deleteImage(this.image.imageId)
     },
     openFullScreen() {

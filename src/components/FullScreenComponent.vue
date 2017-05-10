@@ -41,14 +41,14 @@ export default {
     setSelectedPrediction(predictionId) {
       this.selectedPredictionId = predictionId
     },
-    handleDialogClick(event){
+    handleDialogClick(event) {
       event.stopPropagation()
     },
-    closeDialog(){
+    closeDialog() {
       console.log('thisw')
 
       this.$refs.closeLink.$el.click()
-    }
+    },
   },
   mounted() {
     // this.$nextTick(function() {

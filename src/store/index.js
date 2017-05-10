@@ -151,7 +151,7 @@ const actions = {
       dispatch('reloadImages')
     })
   },
-  stopPolling({ state }) {
+  stopPolling() {
     console.log('Polling stopped')
     imagePoller.cancelPolling()
   },
