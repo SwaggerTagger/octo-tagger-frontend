@@ -1,15 +1,20 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 
+import store from '@/store'
+
 Vue.use(VueResource)
 Vue.http.options.root = '/api'
 
 Vue.http.interceptors.push((request, next) => {
-  request.headers.set('x-auth-token', localStorage.getItem('jwt'))
+  let jwt = store.state.loggedIn.token
+  if (jwt) {
+    request.headers.set('x-auth-token', jwt)
+  }
   next((response) => {
     const jwt = response.headers.get('x-auth-token')
     if (jwt) {
-      localStorage.setItem('jwt', jwt)
+      store.commit('setToken', jwt)
     }
   })
 })
@@ -31,7 +36,7 @@ export const ApiActions = {
       Vue.http.post('/api/signIn', credentials)
 
         .then((success) => {
-          commit('setLogin', { is: true, reason: success })
+          commit('setLogin', { is: true, reason: success, token: success.headers.get('x-auth-token') })
           resolve(true)
         }, (error) => {
           commit('setLogin', { is: false, reason: error })
@@ -40,8 +45,8 @@ export const ApiActions = {
     })
   },
   async logout({ commit }) {
-    localStorage.removeItem('jwt')
-    commit('setLogin', { is: false, reason: null })
+    //localStorage.removeItem('jwt')
+    commit('setLogin', { is: false, reason: null, token: null })
   },
   async register({ commit }, data) {
     Vue.http.post('/api/signUp', data)
@@ -51,11 +56,5 @@ export const ApiActions = {
       }, (error) => {
         commit('setRegister', { is: false, reason: error })
       })
-  },
-  async loadTokenFromCache({ commit }) {
-    const jwt = localStorage.getItem('jwt')
-    if (jwt) {
-      commit('setLogin', { is: true })
-    }
   },
 }

@@ -5,6 +5,8 @@ import LoginComponent from '@/components/LoginComponent'
 import LoginActivated from '@/components/LoginActivated'
 import FullScreenComponent from '@/components/FullScreenComponent'
 import RegisterComponent from '@/components/RegisterComponent'
+import BillingComponent from '@/components/BillingComponent'
+import AboutComponent from '@/components/AboutComponent'
 
 Vue.use(Router)
 
@@ -39,6 +41,16 @@ export default new Router({
       path: '/register',
       component: RegisterComponent,
       name: 'RegisterComponent',
+    },
+    {
+      path: '/billing',
+      component: BillingComponent,
+      name: 'Billingcomponent',
+    },
+    {
+      path: '/about',
+      component: AboutComponent,
+      name: 'AboutComponent',
     },
   ],
 })

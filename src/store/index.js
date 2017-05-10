@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import createPersist, { createStorage } from 'vuex-localstorage'
 import MockApi from '@/utils/mockApi'
 import Poller from '@/utils/poller'
 import { ApiMutations, ApiActions } from '@/utils/api'
@@ -30,6 +32,7 @@ const getters = {
   getPollingInterval: state => state.pollingInterval,
   getImage: (state, uuid) => state.images.find(x => x.imageId === uuid),
   isLoggedIn: state => state.loggedIn.is,
+  getLogin: state => state.loggedIn.reason,
   getUploadQueue: state => state.uploadQueue,
 }
 
@@ -68,6 +71,9 @@ const mutations = {
   },
   setUploadDataUrl(state, { file, dataUri }) {
     Vue.set(file, 'dataUrl', dataUri)
+  },
+  setToken(state, token) {
+    state.loggedIn.token = token;
   },
   ...ApiMutations,
 }
@@ -156,13 +162,16 @@ const actions = {
   ...ApiActions,
 }
 
-
-// A Vuex instance is created by combining the state, mutations, actions,
-// and getters.
 export default new Vuex.Store({
   state: initalState,
   getters,
   actions,
   mutations,
   strict: process.env.NODE_ENV !== 'production',
+    plugins: [ 
+      createPersist({
+        namespace: 'local',
+        initialState : initalState,
+        expires: 5 * 3600
+    })]
 })

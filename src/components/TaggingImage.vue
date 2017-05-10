@@ -21,7 +21,7 @@
       <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration / 1000 }}s</div>
     </md-card-header>
     <div v-if="image.predictions" class="buffer">
-      <div v-for="prediction in image.predictions" class="prediction-chip md-chip md-theme-default">
+      <div v-for="prediction in group(image.predictions)" class="prediction-chip md-chip md-theme-default">
         {{prediction.category}}
       </div>
     </div>
@@ -55,6 +55,20 @@ export default {
     openFullScreen() {
       this.$router.push({ name: 'FullScreenComponent',
         params: { image: this.image, id: this.image.imageId } })
+    },
+    group(predictions) {
+      let grouped = {}, shown = []
+      predictions.forEach(p => {
+        if (p.category in grouped) {
+          grouped[p.category] += 1
+        } else {
+          grouped[p.category] = 1
+        }
+      })
+      for (let name in grouped) {
+        shown.push({ category: grouped[name] === 1 ? name: name + " x" + grouped[name]})
+      }
+    return shown;
     },
     getImageStatus,
   },

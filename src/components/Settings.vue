@@ -29,7 +29,6 @@ export default {
   methods: {
     open() {
       this.$refs.settingsDialog.open()
-      this.$forceUpdate()
     },
     close() {
       this.$refs.settingsDialog.close()

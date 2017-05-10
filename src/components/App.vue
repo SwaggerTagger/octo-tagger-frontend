@@ -1,11 +1,9 @@
 <template>
   <div id="app">
     <md-toolbar>
-      <!---
-        <md-button @click.native="toggleSidenav" class="md-icon-button">
+        <md-button v-if="isLoggedIn()" @click.native="toggleSidenav" class="md-icon-button">
           <md-icon>menu</md-icon>
         </md-button>
-        -->
       <h2 class="md-title" style="flex: 1">
           <router-link class="yolo-title" to="/">
             <span class="sp-yolo">yolo</span>
@@ -22,18 +20,30 @@
         <md-tooltip md-delay="400" md-direction="bottom">Settings</md-tooltip>
       </md-button>
     </md-toolbar>
-    <!---
       <md-sidenav class="md-left" ref="sidenav">
       <md-toolbar class="md-large">
         <div class="md-toolbar-container">
-          <h3 class="md-title">Sidenav content</h3>
+          <h2 class="md-title" style="flex: 1">
+            <router-link class="yolo-title" to="/">
+              <span class="sp-yolo">yolo</span>
+              <span class="sp-tagger">tagger</span>
+            </router-link>
+          </h2>
         </div>
+          <p class="p-welcome" v-if="getLogin()">
+            Welcome, {{prettyName}}
+          </p>
       </md-toolbar>
       <md-list>
-      <md-list-item><router-link to="settings">Settings</router-link></md-list-item>
+        <md-subheader>Navigation</md-subheader>
+        <md-list-item><router-link to="/dashboard"><md-icon>dashboard</md-icon><p>Dashboard</p></router-link></md-list-item>
+        <md-list-item><router-link to="/billing"><md-icon>monetization_on</md-icon><p>Billing</p></router-link></md-list-item>
+        <md-list-item><router-link to="/about"><md-icon>info</md-icon><p>About</p></router-link></md-list-item>
+        <md-subheader>Login</md-subheader>
+        <md-list-item><router-link to="/login"><md-icon>exit_to_app</md-icon><p>Login</p></router-link></md-list-item>
+        <md-list-item><router-link to="/register"><md-icon>blur_circular</md-icon><p>Register</p></router-link></md-list-item>
       </md-list>
     </md-sidenav>
-    -->
     <settings ref="settingsDialog" />
     <router-view></router-view>
   </div>
@@ -57,15 +67,19 @@ export default {
       this.$router.push('/login')
     },
     async redirect() {
-      await this.loadTokenFromCache()
       if (this.isLoggedIn()) {
         this.$router.push('/dashboard')
       } else {
         this.$router.push('/login')
       }
     },
-    ...mapActions(['logout', 'loadTokenFromCache']),
-    ...mapGetters(['isLoggedIn']),
+    ...mapActions(['logout']), 
+    ...mapGetters(['isLoggedIn', 'getLogin']),
+  },
+  computed: {
+    prettyName() {
+      return this.getLogin().body.fullName;
+    }
   },
   mounted() {
     this.redirect()
@@ -86,6 +100,10 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Pacifico|VT323');
+
+.p-welcome {
+  margin-left: 7px;
+}
 
 .sp-yolo {
   font-family: 'Pacifico', cursive;

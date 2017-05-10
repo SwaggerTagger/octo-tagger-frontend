@@ -1,6 +1,7 @@
 <template>
   <video-dialog :title="title" :buttons="loginButtons">
     <div class="md-accent login-failed" v-if="isUnauthorized">register failed.</div>
+    <div class="md-accent login-failed" v-if="isAlreadySignedIn">you are already signed in!</div>
     <div class="login-ok" v-if="isRegisterSuccessful">{{ registerMessage }}</div>
     <form novalidate @submit.stop.prevent="submit">
       <md-input-container>
@@ -74,6 +75,10 @@ export default {
     isRegisterSuccessful() {
       return this.registered.reason
       && this.registered.reason.status === 200
+    },
+    isAlreadySignedIn() {
+      return this.registered.reason
+      && this.registered.reason.status === 403
     },
     registerMessage() {
       return this.registered.reason ?
