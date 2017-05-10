@@ -1,11 +1,11 @@
 <template>
-  <video-dialog :title="title" :buttons="loginButtons">
+<div class="login-component">
     <transition name="component-fade" mode="out-in">
       <div class="md-accent login-ok" v-if="isAlreadyLoggedIn">You are logged in as {{$store.state.loggedIn.reason.body.fullName}}. 
         <md-button @click.native="logout" class="md-raised md-primary">Logout</md-button></div>
       <div class="md-accent login-failed" v-if="isUnauthorized">login failed.</div>
       <div class="md-accent login-failed" v-if="isPreconditionFailed">validate your email!!</div>
-      <router-view></router-view>
+      <router-view v-if="!sessionExpired"></router-view>
     </transition>
     <form @keyup.enter="doLogin" novalidate @submit.stop.prevent="submit">
       <md-input-container>
@@ -21,8 +21,7 @@
         class="md-primary md-raised">Login</md-button>
       <md-switch class="md-accent" v-model="rememberMe" name="remember-me"><i>remember me</i></md-switch>
     </form>
-    </md-whiteframe>
-  </video-dialog>
+</div>
 </template>
 
 <script>
@@ -33,17 +32,6 @@ const formState = {
   rememberMe: true,
   email: '',
   password: '',
-  title: 'Login',
-  loginButtons: [
-    {
-      text: 'register',
-      to: '/register',
-    },
-    {
-      text: 'cancel',
-      to: '/',
-    },
-  ],
 }
 
 export default {
@@ -75,6 +63,9 @@ export default {
     },
     isAlreadyLoggedIn() {
       return this.loggedIn.is
+    },
+    sessionExpired() {
+      return this.$store.state.loggedIn.sessionExpired
     },
     ...mapState([
       'loggedIn',

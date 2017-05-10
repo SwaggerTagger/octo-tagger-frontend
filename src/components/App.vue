@@ -77,6 +77,7 @@
       </md-list>
     </md-sidenav>
     <settings ref="settingsDialog" />
+    <session-expired v-if="$store.state.loggedIn.sessionExpired" />
     <router-view></router-view>
   </div>
 </template>
@@ -84,6 +85,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import Settings from './Settings'
+import SessionExpired from './SessionExpiredComponent'
 
 export default {
   name: 'app',
@@ -138,6 +140,7 @@ export default {
   },
   components: {
     settings: Settings,
+    sessionExpired: SessionExpired
   },
 }
 </script>

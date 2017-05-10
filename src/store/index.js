@@ -17,6 +17,7 @@ const initalState = {
   filterText: "",
   loggedIn: {
     is: false,
+    sessionExpired: false,
     token: null,
     reason: null,
   },
@@ -82,6 +83,11 @@ const mutations = {
   },
   updateFilter(state, filterText) {
     state.filterText = filterText
+  },
+  sessionExpired(state, response) {
+    state.loggedIn.is = false
+    state.loggedIn.token = null
+    state.loggedIn.sessionExpired = true
   },
   ...ApiMutations,
 }

@@ -12,9 +12,11 @@ Vue.http.interceptors.push((request, next) => {
     request.headers.set('x-auth-token', jwt)
   }
   next((response) => {
-    const jwt = response.headers.get('x-auth-token')
-    if (jwt) {
-      store.commit('setToken', jwt)
+    if (response.status !== 401) {
+      const jwt = response.headers.get('x-auth-token')
+      if (jwt) store.commit('setToken', jwt);
+    } else {
+      store.commit('sessionExpired', response)
     }
   })
 })

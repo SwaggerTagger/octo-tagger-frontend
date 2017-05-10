@@ -29,7 +29,7 @@
     <md-table-body>
       <md-table-row v-for="(row, rowIndex) in images" :key="rowIndex" :md-item="row" md-selection>
         <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" :md-numeric="columnIndex !== 'dessert' && columnIndex !== 'comment' && columnIndex !== 'type'">
-          <span v-if="columnIndex === 'filename'"><a target="_blank" :href="images[rowIndex]['url']">{{column}}</a></span>
+          <span v-if="columnIndex === 'filename'"><a target="_blank" :href="getImages()[rowIndex].url">{{column}}</a></span>
           <span v-if="columnIndex === 'state'">
             <md-icon v-if="column === 'completed'">check_circle</md-icon>
             <md-icon v-if="column === 'pending'">settings_ethernet</md-icon>
