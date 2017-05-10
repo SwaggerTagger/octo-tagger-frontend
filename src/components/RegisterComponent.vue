@@ -1,9 +1,10 @@
 <template>
   <video-dialog :title="title" :buttons="loginButtons">
+    <div class="md-accent login-ok" v-if="isAlreadyLoggedIn">You are logged in as {{$store.state.loggedIn.reason.body.fullName}}. 
+      <md-button @click.native="logout" class="md-raised md-primary">Logout</md-button></div>
     <div class="md-accent login-failed" v-if="isUnauthorized">register failed.</div>
-    <div class="md-accent login-failed" v-if="isAlreadySignedIn">you are already signed in!</div>
     <div class="login-ok" v-if="isRegisterSuccessful">{{ registerMessage }}</div>
-    <form novalidate @submit.stop.prevent="submit">
+    <form @keyup.enter="doRegister" novalidate @submit.stop.prevent="submit">
       <md-input-container>
         <label>Firstname</label>
         <md-input v-model="firstName" required type="text"></md-input>
@@ -21,7 +22,7 @@
         <label>Password</label>
         <md-input required v-model="password" type="password"></md-input>
       </md-input-container>
-      <md-button @click.native="doRegister" class="md-primary md-raised">Register</md-button>
+      <md-button @click.native="doRegister" :disabled="isAlreadyLoggedIn" class="md-primary md-raised">Register</md-button>
     </form>
     </md-whiteframe>
   </video-dialog>
@@ -57,7 +58,7 @@ export default {
   name: 'register-component',
   data: () => state,
   methods: {
-    ...mapActions(['register']),
+    ...mapActions(['register', 'logout']),
 
     doRegister() {
       this.register({
@@ -76,17 +77,14 @@ export default {
       return this.registered.reason
       && this.registered.reason.status === 200
     },
-    isAlreadySignedIn() {
-      return this.registered.reason
-      && this.registered.reason.status === 403
-    },
     registerMessage() {
-      return this.registered.reason ?
-        JSON.parse(this.registered.reason.bodyText).info
-        : ''
+      return this.registered.reason ? this.registered.reason.body.info : ''
+    },
+    isAlreadyLoggedIn() {
+      return this.loggedIn.is
     },
     ...mapState([
-      'registered',
+      'registered', 'loggedIn'
     ]),
   },
   components: { VideoDialog },

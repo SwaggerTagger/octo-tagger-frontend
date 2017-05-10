@@ -14,6 +14,7 @@ const initalState = {
   images: [],
   uploadQueue: [],
   pollingInterval: 5,
+  filterText: "",
   loggedIn: {
     is: false,
     token: null,
@@ -29,6 +30,10 @@ const imagePoller = Poller()
 // getters are functions
 const getters = {
   getImages: state => state.images,
+  getFilteredImages: state => state.filterText !== ""? 
+    state.images.filter(x => x.predictions && x.predictions.some( (el) => el.category.startsWith(state.filterText)))
+    : state.images,
+  getFilterText: state => state.filterText,
   getPollingInterval: state => state.pollingInterval,
   getImage: (state, uuid) => state.images.find(x => x.imageId === uuid),
   isLoggedIn: state => state.loggedIn.is,
@@ -74,6 +79,9 @@ const mutations = {
   },
   setToken(state, token) {
     state.loggedIn.token = token;
+  },
+  updateFilter(state, filterText) {
+    state.filterText = filterText
   },
   ...ApiMutations,
 }

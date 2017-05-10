@@ -45,7 +45,6 @@ export const ApiActions = {
     })
   },
   async logout({ commit }) {
-    //localStorage.removeItem('jwt')
     commit('setLogin', { is: false, reason: null, token: null })
   },
   async register({ commit }, data) {

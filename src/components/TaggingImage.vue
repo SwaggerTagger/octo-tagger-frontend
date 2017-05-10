@@ -8,21 +8,25 @@
             <h3>{{getImageStatus(image)}}</h3>
             <md-progress md-indeterminate></md-progress>
           </div>
-  
         </div>
         <img slot="img" src="../assets/aspect_ratio_hack.png" />
       </aspect-ratio>
     </md-card-media>
     <md-card-area class="img-area">
     <md-card-header>
-      <div class="md-title">{{image.filename}}</div>
+      <div class="md-title break">{{image.filename}}</div>
       <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
       <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
       <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration / 1000 }}s</div>
     </md-card-header>
     <div v-if="image.predictions" class="buffer">
       <div v-for="prediction in group(image.predictions)" class="prediction-chip md-chip md-theme-default">
-        {{prediction.category}}
+        <template v-if="filterApplied">
+          <span class="markings">{{filterMatchPart(prediction.category)}}</span><span>{{filterRest(prediction.category)}}</span>
+        </template>
+        <template v-else>
+          {{prediction.category}}
+        </template>
       </div>
     </div>
     <div class="buffer" />
@@ -36,7 +40,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { getImageStatus } from '@/utils/helpers'
 import AspectRatio from './AspectRatio'
 
@@ -48,6 +52,7 @@ export default {
   components: { 'aspect-ratio': AspectRatio },
   methods: {
     ...mapActions(['deleteImage']),
+    ...mapGetters(['getFilterText']),
     deleteSelf(event) {
       event.stopPropagation()
       this.deleteImage(this.image.imageId)
@@ -70,12 +75,33 @@ export default {
       }
     return shown;
     },
+    filterMatchPart(tag) {
+      const f = this.getFilterText()
+      const p = tag.startsWith(f) ? tag.slice(0, f.length) : ""
+      return p
+    }, 
+    filterRest(tag) {
+      const f = this.getFilterText()
+      return tag.startsWith(f) ? tag.slice(f.length) : tag
+    },
     getImageStatus,
   },
+  computed: {
+    filterApplied() {
+      return this.$store.state.filterText !== ""
+    },
+  }
 }
 </script>
 
 <style>
+.markings {
+  background-color:orangered;
+  
+}
+.break {
+  word-wrap: break-word;
+}
 .img-area {
   background: rgba(0, 0,0,0.3);
   font-family: 'VT323', monospace;

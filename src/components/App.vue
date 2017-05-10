@@ -1,15 +1,22 @@
 <template>
   <div id="app">
     <md-toolbar>
-        <md-button v-if="isLoggedIn()" @click.native="toggleSidenav" class="md-icon-button">
-          <md-icon>menu</md-icon>
-        </md-button>
+      <md-button v-if="isLoggedIn()" @click.native="toggleSidenav" class="md-icon-button">
+        <md-icon>menu</md-icon>
+      </md-button>
       <h2 class="md-title" style="flex: 1">
-          <router-link class="yolo-title" to="/">
-            <span class="sp-yolo">yolo</span>
-            <span class="sp-tagger">tagger</span>
-          </router-link>
-        </h2>
+            <router-link class="yolo-title" to="/">
+              <span class="sp-yolo">yolo</span>
+              <span class="sp-tagger">tagger</span>
+            </router-link>
+          </h2>
+      <md-input-container v-if="onDashboard" class="tag-search">
+        <md-icon>
+          filter_list
+        </md-icon>
+        <label>filter by tag..</label>
+        <md-input :value="filterText" @input="updateFilter" type="text"></md-input>
+      </md-input-container>
   
       <md-button class="md-icon-button" @click.native="doLogout">
         <md-icon>exit_to_app</md-icon>
@@ -20,28 +27,53 @@
         <md-tooltip md-delay="400" md-direction="bottom">Settings</md-tooltip>
       </md-button>
     </md-toolbar>
-      <md-sidenav class="md-left" ref="sidenav">
+    <md-sidenav class="md-left" ref="sidenav">
       <md-toolbar class="md-large">
         <div class="md-toolbar-container">
           <h2 class="md-title" style="flex: 1">
-            <router-link class="yolo-title" to="/">
-              <span class="sp-yolo">yolo</span>
-              <span class="sp-tagger">tagger</span>
-            </router-link>
-          </h2>
+              <router-link class="yolo-title" to="/">
+                <span class="sp-yolo">yolo</span>
+                <span class="sp-tagger">tagger</span>
+              </router-link>
+            </h2>
         </div>
-          <p class="p-welcome" v-if="getLogin()">
-            Welcome, {{prettyName}}
-          </p>
+        <p class="p-welcome" v-if="getLogin()">
+          Welcome, {{prettyName}}
+        </p>
       </md-toolbar>
       <md-list>
         <md-subheader>Navigation</md-subheader>
-        <md-list-item><router-link to="/dashboard"><md-icon>dashboard</md-icon><p>Dashboard</p></router-link></md-list-item>
-        <md-list-item><router-link to="/billing"><md-icon>monetization_on</md-icon><p>Billing</p></router-link></md-list-item>
-        <md-list-item><router-link to="/about"><md-icon>info</md-icon><p>About</p></router-link></md-list-item>
+        <md-list-item>
+          <router-link to="/dashboard">
+            <md-icon>dashboard</md-icon>
+            <p>Dashboard</p>
+          </router-link>
+        </md-list-item>
+        <md-list-item>
+          <router-link to="/billing">
+            <md-icon>monetization_on</md-icon>
+            <p>Billing</p>
+          </router-link>
+        </md-list-item>
+        <md-list-item>
+          <router-link to="/about">
+            <md-icon>info</md-icon>
+            <p>About</p>
+          </router-link>
+        </md-list-item>
         <md-subheader>Login</md-subheader>
-        <md-list-item><router-link to="/login"><md-icon>exit_to_app</md-icon><p>Login</p></router-link></md-list-item>
-        <md-list-item><router-link to="/register"><md-icon>blur_circular</md-icon><p>Register</p></router-link></md-list-item>
+        <md-list-item>
+          <router-link to="/login">
+            <md-icon>exit_to_app</md-icon>
+            <p>Login</p>
+          </router-link>
+        </md-list-item>
+        <md-list-item>
+          <router-link to="/register">
+            <md-icon>blur_circular</md-icon>
+            <p>Register</p>
+          </router-link>
+        </md-list-item>
       </md-list>
     </md-sidenav>
     <settings ref="settingsDialog" />
@@ -50,7 +82,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import Settings from './Settings'
 
 export default {
@@ -66,6 +98,9 @@ export default {
       this.logout()
       this.$router.push('/login')
     },
+    updateFilter(e) {
+      this.$store.commit('updateFilter', e)
+    },
     async redirect() {
       if (this.isLoggedIn()) {
         this.$router.push('/dashboard')
@@ -73,13 +108,22 @@ export default {
         this.$router.push('/login')
       }
     },
-    ...mapActions(['logout']), 
+    ...mapActions(['logout']),
     ...mapGetters(['isLoggedIn', 'getLogin']),
   },
   computed: {
     prettyName() {
       return this.getLogin().body.fullName;
-    }
+    },
+
+    onDashboard() {
+      return this.$route.name === "Dashboard"
+    },
+
+    ...mapState({
+      filterText: state => state.filterText
+    })
+
   },
   mounted() {
     this.redirect()
@@ -117,5 +161,10 @@ export default {
 
 .yolo-title {
   color: white !important;
+}
+
+.tag-search {
+  width: initial;
+  min-width: 200px;
 }
 </style>

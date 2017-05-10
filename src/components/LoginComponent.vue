@@ -1,6 +1,8 @@
 <template>
   <video-dialog :title="title" :buttons="loginButtons">
     <transition name="component-fade" mode="out-in">
+      <div class="md-accent login-ok" v-if="isAlreadyLoggedIn">You are logged in as {{$store.state.loggedIn.reason.body.fullName}}. 
+        <md-button @click.native="logout" class="md-raised md-primary">Logout</md-button></div>
       <div class="md-accent login-failed" v-if="isUnauthorized">login failed.</div>
       <div class="md-accent login-failed" v-if="isPreconditionFailed">validate your email!!</div>
       <router-view></router-view>
@@ -15,7 +17,7 @@
         <label>Password</label>
         <md-input v-model="password" required type="password"></md-input>
       </md-input-container>
-      <md-button @click.native="doLogin"
+      <md-button @click.native="doLogin" :disabled="isAlreadyLoggedIn"
         class="md-primary md-raised">Login</md-button>
       <md-switch class="md-accent" v-model="rememberMe" name="remember-me"><i>remember me</i></md-switch>
     </form>
@@ -49,7 +51,7 @@ export default {
   components: { VideoDialog },
   data: () => formState,
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'logout']),
 
     async doLogin() {
       if (await this.login({
@@ -70,6 +72,9 @@ export default {
     isPreconditionFailed() {
       return this.loggedIn.reason
       && this.loggedIn.reason.status === 412
+    },
+    isAlreadyLoggedIn() {
+      return this.loggedIn.is
     },
     ...mapState([
       'loggedIn',
@@ -97,6 +102,10 @@ form {
   width: 300px;
   padding: 10px;
   background-color: white;
+}
+
+.blue {
+  color: turquoise !important;
 }
 
 .component-fade-enter-active, .component-fade-leave-active {
