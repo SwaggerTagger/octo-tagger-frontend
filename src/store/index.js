@@ -15,6 +15,9 @@ const initalState = {
   uploadQueue: [],
   pollingInterval: 5,
   filterText: "",
+  predictionBoxWidth: 2,
+  predictionConfidence: 33,
+  predictionFontSize: "inherit",
   loggedIn: {
     is: false,
     sessionExpired: false,
@@ -32,14 +35,24 @@ const imagePoller = Poller()
 const getters = {
   getImages: state => state.images,
   getFilteredImages: state => state.filterText !== ""? 
-    state.images.filter(x => x.predictions && x.predictions.some( (el) => el.category.startsWith(state.filterText)))
+    state.images.filter(x => x.predictions 
+        && x.predictions.some( (el) => el.category.startsWith(state.filterText)))
     : state.images,
+  getProbabilityFilteredImages: (state, getters) => 
+    getters.getFilteredImages.map(image => {
+      let filteredImages = Object.assign({}, image)
+      filteredImages.predictions = image.predictions.filter(pred => pred.probability >= (getters.getPredictionConfidence / 100.0))
+      return filteredImages
+    }),
   getFilterText: state => state.filterText,
   getPollingInterval: state => state.pollingInterval,
   getImage: (state, uuid) => state.images.find(x => x.imageId === uuid),
   isLoggedIn: state => state.loggedIn.is,
   getLogin: state => state.loggedIn.reason,
   getUploadQueue: state => state.uploadQueue,
+  getPredictionBoxWidth: state => state.predictionBoxWidth,
+  getPredictionFontSize: state => state.predictionFontSize,
+  getPredictionConfidence: state => state.predictionConfidence,
 }
 
 // mutations are operations that actually mutates the state.
@@ -88,6 +101,15 @@ const mutations = {
     state.loggedIn.is = false
     state.loggedIn.token = null
     state.loggedIn.sessionExpired = true
+  },
+  setPredictionBoxWidth(state, width) {
+    state.predictionBoxWidth = width
+  },
+  setPredictionFontSize(state, size) {
+    state.predictionFontSize = size
+  },
+  setPredictionConfidence(state, confidence) {
+    state.predictionConfidence = confidence
   },
   ...ApiMutations,
 }

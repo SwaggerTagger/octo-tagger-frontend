@@ -3,10 +3,28 @@
     <md-dialog-title>Settings</md-dialog-title>
       
     <md-dialog-content>
-      <md-input-container v-bind:class="{'md-input-invalid':wrongInterval}">
-        <label>Polling Interval in seconds:</label>
-        <md-input v-model="pollingInterval" type="number"/>
-        <span v-if="wrongInterval" class="md-error">Value must be between 1 and 10000</span>
+      <md-subheader>Backend Connectivity</md-subheader>
+      <md-divider></md-divider>
+      <div class="margin-top">
+      <label class="label">Polling Interval in seconds: <span class="val-display">{{pollingInterval}} secs</span></label>
+        <vue-slider v-model="pollingInterval" tooltip="never" :min="3" :max="10"></vue-slider>
+      </div>
+      <md-subheader>Functionality</md-subheader>
+      <md-divider></md-divider>
+        <label class="label">Prediction Confidence Cutoff: <span class="val-display">{{predictionConfidence}}%</span></label>
+        <vue-slider v-model="predictionConfidence" tooltip="never" :min="1" :max="100"></vue-slider>
+        
+      <md-subheader>Appearance</md-subheader>
+      <md-divider></md-divider>
+      <label class="label">Prediction Box Size: <span class="val-display">{{boxWidth}}px</span></label>
+      <vue-slider v-model="boxWidth" :min="1" :max="10" tooltip="never"></vue-slider>
+      <md-input-container>
+        <label>Prediction Font Size: </label>
+          <md-select v-model="fontSize">
+            <md-option value="xx-large">huge</md-option>
+            <md-option value="large">larger</md-option>
+            <md-option value="inherit">normal</md-option>
+          </md-select>
       </md-input-container>
     </md-dialog-content>
 
@@ -17,10 +35,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
+import vueSlider from 'vue-slider-component'
 
 export default {
   name: 'settings',
+  components: { 'vue-slider': vueSlider },
   data() {
     return {
       wrongInterval: false,
@@ -33,23 +53,60 @@ export default {
     close() {
       this.$refs.settingsDialog.close()
     },
-    isPIntervalvalid(value = this.pollingInterval) {
-      return value > 0 && value < 10000
-    },
   },
   computed: {
-    ...mapGetters({ pInterval: 'getPollingInterval' }),
+    ...mapGetters({ pInterval: 'getPollingInterval', 
+    predictionFontSize: 'getPredictionFontSize',
+    pConfidence: 'getPredictionConfidence',
+    predictionBoxWidth: 'getPredictionBoxWidth'}),
+
     pollingInterval: {
       get() {
         return this.pInterval
       },
       set(value) {
-        this.wrongInterval = !this.isPIntervalvalid(value)
-        if (this.isPIntervalvalid(value)) {
           this.$store.dispatch('setPollingInterval', value)
-        }
-      },
+      }
     },
+    boxWidth: {
+      get() {
+        return this.predictionBoxWidth;
+      },
+      set(value) {
+        this.$store.commit('setPredictionBoxWidth', value)
+      }
+    },
+    fontSize: {
+      get() {
+        return this.predictionFontSize
+      }, 
+      set(value) {
+        this.$store.commit('setPredictionFontSize', value)
+      }
+    },
+    predictionConfidence: {
+      get() {
+        return this.pConfidence;
+      }, 
+      set(value) {
+        this.$store.commit('setPredictionConfidence', value)
+      }
+    }
   },
 }
 </script>
+<style>
+.val-display {
+  background-color: rgba(0,0,0,.54);
+  color: white;
+  padding: 2px 4px 2px 4px;
+  border-radius: 4px;
+}
+.label {
+  color: rgba(0,0,0,.54);
+  font-size:12px;
+}
+.margin-top {
+  margin-top:10px;
+}
+</style>

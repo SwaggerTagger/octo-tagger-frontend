@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import VueMaterial from 'vue-material'
 import VueMoment from 'vue-moment'
+import VueSlider from 'vue-slider-component'
 
 import 'vue-material/dist/vue-material.css'
 import App from './components/App'
@@ -24,5 +25,5 @@ new Vue({
     root: '/api',
   },
   template: '<App/>',
-  components: { App },
+  components: { App, VueSlider },
 })
