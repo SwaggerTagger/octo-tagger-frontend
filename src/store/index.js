@@ -41,7 +41,9 @@ const getters = {
   getProbabilityFilteredImages: (state, getters) => 
     getters.getFilteredImages.map(image => {
       let filteredImages = Object.assign({}, image)
-      filteredImages.predictions = image.predictions.filter(pred => pred.probability >= (getters.getPredictionConfidence / 100.0))
+      filteredImages.predictions = image.predictions?
+        image.predictions.filter(pred => pred.probability >= (getters.getPredictionConfidence / 100.0))
+      : undefined
       return filteredImages
     }),
   getFilterText: state => state.filterText,
