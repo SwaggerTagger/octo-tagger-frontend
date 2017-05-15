@@ -8,17 +8,20 @@
       <div class="margin-top">
       <md-switch v-model="useLegacy" class="md-primary">Use Legacy Polling (instead of SSE)</md-switch>
       <label class="label">Polling Interval in seconds: <span class="val-display">{{pollingInterval}} secs</span></label>
-        <vue-slider v-model="pollingInterval" tooltip="never" :min="3" :max="10"></vue-slider>
+        <vue-slider v-model="pollingInterval" tooltip="never" 
+              class="slider" :min="3" :max="10" :height="2" :bgStyle="sliderStyle" />
       </div>
       <md-subheader>Functionality</md-subheader>
       <md-divider></md-divider>
-        <label class="label">Prediction Confidence Cutoff: <span class="val-display">{{predictionConfidence}}%</span></label>
-        <vue-slider v-model="predictionConfidence" tooltip="never" :min="1" :max="100"></vue-slider>
+        <label class="label">Prediction Confidence Threshold: <span class="val-display">{{predictionConfidence}}%</span></label>
+        <vue-slider v-model="predictionConfidence" tooltip="never" 
+              class="slider" :min="1" :max="100" :height="2" :bgStyle="sliderStyle" />
         
       <md-subheader>Appearance</md-subheader>
       <md-divider></md-divider>
       <label class="label">Prediction Box Size: <span class="val-display">{{boxWidth}}px</span></label>
-      <vue-slider v-model="boxWidth" :min="1" :max="10" tooltip="never"></vue-slider>
+      <vue-slider v-model="boxWidth" tooltip="never" 
+            class="slider" :min="1" :max="10" :height="2" :bgStyle="sliderStyle" />
       <md-input-container>
         <label>Prediction Font Size: </label>
           <md-select v-model="fontSize">
@@ -45,6 +48,8 @@ export default {
   data() {
     return {
       wrongInterval: false,
+      sliderStyle: {
+      }
     }
   },
   methods: {
@@ -118,5 +123,12 @@ export default {
 }
 .margin-top {
   margin-top:10px;
+}
+.slider .vue-slider .vue-slider-dot {
+  background-color: #3f51b5;
+  box-shadow: inherit;
+}
+.slider .vue-slider .vue-slider-process {
+  background-color: #3f51b5;
 }
 </style>

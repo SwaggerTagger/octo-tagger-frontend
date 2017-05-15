@@ -5,6 +5,7 @@ import createPersist, { createStorage } from 'vuex-localstorage'
 import MockApi from '@/utils/mockApi'
 import Poller from '@/utils/poller'
 import { ApiMutations, ApiActions } from '@/utils/api'
+import router from '@/router'
 
 Vue.use(Vuex)
 
@@ -113,10 +114,12 @@ const mutations = {
   updateFilter(state, filterText) {
     state.filterText = filterText
   },
-  sessionExpired(state) {
-    state.loggedIn.is = false
-    state.loggedIn.token = null
-    state.loggedIn.sessionExpired = true
+  sessionExpired(state, response) {
+    if (router.currentRoute.fullPath !== '/login') {
+      state.loggedIn.is = false
+      state.loggedIn.token = null
+      state.loggedIn.sessionExpired = true
+    }
   },
   setPredictionBoxWidth(state, width) {
     state.predictionBoxWidth = width
