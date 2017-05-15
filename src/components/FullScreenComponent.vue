@@ -54,7 +54,7 @@ export default {
     ...mapGetters({
       predictionBoxWidth: 'getPredictionBoxWidth',
       predictionConfidence: 'getPredictionConfidence',
-      predictionFontSize: 'getPredictionFontSize'
+      predictionFontSize: 'getPredictionFontSize',
     }),
     predictionOverlays() {
       if (this.image.predictions === undefined) {
@@ -68,7 +68,7 @@ export default {
           width: convertToCssPercentage((prediction.right - prediction.left) / width),
           height: convertToCssPercentage((prediction.bottom - prediction.top) / height),
           'font-size': this.predictionFontSize,
-          'border-width': this.predictionBoxWidth + "px"
+          'border-width': `${this.predictionBoxWidth}px`,
         }
         const text = `${prediction.category} (${prediction.probability})`
         return { style, text, predictionId: prediction.predictionId, probability: prediction.probability }

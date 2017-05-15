@@ -11,20 +11,20 @@ import LoginComponent from './LoginComponent'
 
 
 export default {
-    name: 'video-login-component',
-    components: { VideoDialog, LoginComponent },
-    data: () => ({
-        title: 'Login',
-        loginButtons: [
-            {
-                text: 'register',
-                to: '/register',
-            },
-            {
-                text: 'cancel',
-                to: '/',
-            },
-        ]
-    }),
+  name: 'video-login-component',
+  components: { VideoDialog, LoginComponent },
+  data: () => ({
+    title: 'Login',
+    loginButtons: [
+      {
+        text: 'register',
+        to: '/register',
+      },
+      {
+        text: 'cancel',
+        to: '/',
+      },
+    ],
+  }),
 }
 </script>

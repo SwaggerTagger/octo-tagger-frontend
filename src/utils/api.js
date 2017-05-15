@@ -7,14 +7,14 @@ Vue.use(VueResource)
 Vue.http.options.root = '/api'
 
 Vue.http.interceptors.push((request, next) => {
-  let jwt = store.state.loggedIn.token
+  const jwt = store.state.loggedIn.token
   if (jwt) {
     request.headers.set('x-auth-token', jwt)
   }
   next((response) => {
     if (response.status !== 401) {
       const jwt = response.headers.get('x-auth-token')
-      if (jwt) store.commit('setToken', jwt);
+      if (jwt) store.commit('setToken', jwt)
     } else {
       store.commit('sessionExpired', response)
     }

@@ -6,6 +6,7 @@
       <md-subheader>Backend Connectivity</md-subheader>
       <md-divider></md-divider>
       <div class="margin-top">
+      <md-switch v-model="useLegacy" class="md-primary">Use Legacy Polling (instead of SSE)</md-switch>
       <label class="label">Polling Interval in seconds: <span class="val-display">{{pollingInterval}} secs</span></label>
         <vue-slider v-model="pollingInterval" tooltip="never" 
               class="slider" :min="3" :max="10" :height="2" :bgStyle="sliderStyle" />
@@ -63,8 +64,17 @@ export default {
     ...mapGetters({ pInterval: 'getPollingInterval', 
     predictionFontSize: 'getPredictionFontSize',
     pConfidence: 'getPredictionConfidence',
-    predictionBoxWidth: 'getPredictionBoxWidth'}),
+    predictionBoxWidth: 'getPredictionBoxWidth',
+    useLegacyPoll:'getUseLegacy'}),
 
+    useLegacy: {
+      get() {
+        return this.useLegacyPoll
+      },
+      set(value) {
+        this.$store.dispatch('setPollingMethod',value)
+      }
+    },
     pollingInterval: {
       get() {
         return this.pInterval

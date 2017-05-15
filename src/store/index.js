@@ -15,10 +15,11 @@ const initalState = {
   images: [],
   uploadQueue: [],
   pollingInterval: 5,
-  filterText: "",
+  filterText: '',
+  useLegacy: false,
   predictionBoxWidth: 2,
   predictionConfidence: 33,
-  predictionFontSize: "inherit",
+  predictionFontSize: 'inherit',
   loggedIn: {
     is: false,
     sessionExpired: false,
@@ -32,18 +33,20 @@ const initalState = {
 }
 const imagePoller = Poller()
 
+let imageEventSource
+
 // getters are functions
 const getters = {
   getImages: state => state.images,
-  getFilteredImages: state => state.filterText !== ""? 
-    state.images.filter(x => x.predictions 
-        && x.predictions.some( (el) => el.category.startsWith(state.filterText)))
-    : state.images,
-  getProbabilityFilteredImages: (state, getters) => 
-    getters.getFilteredImages.map(image => {
-      let filteredImages = Object.assign({}, image)
-      filteredImages.predictions = image.predictions?
-        image.predictions.filter(pred => pred.probability >= (getters.getPredictionConfidence / 100.0))
+  getFilteredImages: state => (state.filterText !== '' ?
+    state.images.filter(x => x.predictions
+        && x.predictions.some(el => el.category.startsWith(state.filterText)))
+    : state.images),
+  getProbabilityFilteredImages: (state, getters) =>
+    getters.getFilteredImages.map((image) => {
+      const filteredImages = Object.assign({}, image)
+      filteredImages.predictions = image.predictions ?
+        image.predictions.filter(pred => (pred.probability >= (getters.getPredictionConfidence / 100.0)))
       : undefined
       return filteredImages
     }),
@@ -56,6 +59,7 @@ const getters = {
   getPredictionBoxWidth: state => state.predictionBoxWidth,
   getPredictionFontSize: state => state.predictionFontSize,
   getPredictionConfidence: state => state.predictionConfidence,
+  getUseLegacy: state => state.useLegacy,
 }
 
 // mutations are operations that actually mutates the state.
@@ -71,6 +75,10 @@ const mutations = {
   addImage(state, image) {
     state.images.push(image)
     state.images.sort((a, b) => (b.uploadedAt - a.uploadedAt))
+  },
+  updateImage(state, image) {
+    const index = state.images.findIndex(e => image.imageId === e.imageId)
+    Vue.set(state.images, index, image)
   },
   deleteImage(state, imageId) {
     state.images = state.images.filter(value => imageId !== value.imageId)
@@ -88,14 +96,20 @@ const mutations = {
   setUploadRequest(state, { file, request }) {
     file.request = request
   },
+  setLegacyPolling(state, useLegacy) {
+    state.useLegacy = useLegacy
+  },
   setPollingInterval(state, seconds) {
     state.pollingInterval = seconds
+  },
+  setPollingMethod(state, useLegacy) {
+    state.pollingMethod = useLegacy
   },
   setUploadDataUrl(state, { file, dataUri }) {
     Vue.set(file, 'dataUrl', dataUri)
   },
   setToken(state, token) {
-    state.loggedIn.token = token;
+    state.loggedIn.token = token
   },
   updateFilter(state, filterText) {
     state.filterText = filterText
@@ -190,14 +204,37 @@ const actions = {
     commit('setPollingInterval', seconds)
     dispatch('startPolling')
   },
-  startPolling({ state, dispatch }) {
-    console.log('Polling started')
-    imagePoller.startPolling(getters.getPollingInterval(state) * 1000, () => {
-      dispatch('reloadImages')
-    })
+  setPollingMethod({ commit, dispatch }, useLegacy) {
+    commit('setPollingMethod', useLegacy)
+    dispatch('startPolling')
+  },
+  startPolling({ state, dispatch, commit }) {
+    if (state.useLegacy === false) {
+      if (imageEventSource != null) {
+        imageEventSource.close()
+      }
+      imageEventSource = new EventSource(`/api/events?X-Auth-Token=${state.loggedIn.token}`)
+      imageEventSource.onError = function (event) {
+        console.log(event)
+      }
+      const callback = function (e) {
+        console.log(e)
+        commit('updateImage', JSON.parse(e.data).image)
+      }
+      imageEventSource.addEventListener('started', callback)
+      imageEventSource.addEventListener('finished', callback)
+    } else {
+      console.log('Polling started')
+      imagePoller.startPolling(getters.getPollingInterval(state) * 1000, () => {
+        dispatch('reloadImages')
+      })
+    }
   },
   stopPolling() {
     console.log('Polling stopped')
+    if (imageEventSource != null) {
+      imageEventSource.close()
+    }
     imagePoller.cancelPolling()
   },
   ...ApiActions,
@@ -209,10 +246,10 @@ export default new Vuex.Store({
   actions,
   mutations,
   strict: process.env.NODE_ENV !== 'production',
-    plugins: [ 
-      createPersist({
-        namespace: 'local',
-        initialState : initalState,
-        expires: 5 * 3600
-    })]
+  plugins: [
+    createPersist({
+      namespace: 'local',
+      initialState: initalState,
+      expires: 5 * 3600,
+    })],
 })
