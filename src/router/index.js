@@ -9,7 +9,6 @@ import BillingComponent from '@/components/BillingComponent'
 import AboutComponent from '@/components/AboutComponent'
 import SessionExpiredComponent from '@/components/SessionExpiredComponent'
 
-
 Vue.use(Router)
 
 export default new Router({
