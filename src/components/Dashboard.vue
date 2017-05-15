@@ -37,7 +37,7 @@ import UploadingFile from './UploadingFile'
 export default {
   name: 'dashboard',
   computed: mapGetters({
-    images: 'getFilteredImages',
+    images: 'getProbabilityFilteredImages',
     uploadQueue: 'getUploadQueue',
   }),
   methods: mapActions([

@@ -73,7 +73,6 @@ form {
 }
 
 .aligned-item {
-  max-width: 50%;
   padding: 0px;
   opacity: 0.8;
 }

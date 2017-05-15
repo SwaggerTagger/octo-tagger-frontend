@@ -2,17 +2,18 @@
   <div class="full-screen-component">
     <div class="blur-overlay" @click="closeDialog">
     </div>
+      <router-link to="/dashboard">
+        <md-button ref="closeLink" class="md-fab md-primary md-fab-top-right top-margin">
+          <md-icon class="white">close</md-icon>
+        </md-button>
+      </router-link>
     <div class="valigner">
       <md-whiteframe @click.native="handleDialogClick" md-elevation="15" class="full-screen-dialog">
-        <router-link to="/dashboard">
-          <md-button ref="closeLink" class="md-fab md-accent md-fab-top-right">
-            <md-icon class="white">close</md-icon>
-          </md-button>
-        </router-link>
         <div 
           class="overlay-container">
           <div class="overlay" 
             :style="overlay.style"
+            v-if="overlay.probability >= (predictionConfidence / 100.0)"
             v-for="overlay in predictionOverlays">
             <span>{{overlay.text}}</span>
           </div>
@@ -28,6 +29,7 @@
 
 <script>
 import { convertToCssPercentage } from '@/utils/helpers'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'fullscreen-image',
@@ -48,17 +50,12 @@ export default {
       this.$refs.closeLink.$el.click()
     },
   },
-  mounted() {
-    // this.$nextTick(function() {
-    //   console.log('adding')
-    //   window.addEventListener('click',this.closeDialog)
-    // })
-  },
-  beforeDestroy() {
-    // console.log('destroying')
-    // window.removeEventListener('click', this.closeDialog);
-  },
   computed: {
+    ...mapGetters({
+      predictionBoxWidth: 'getPredictionBoxWidth',
+      predictionConfidence: 'getPredictionConfidence',
+      predictionFontSize: 'getPredictionFontSize'
+    }),
     predictionOverlays() {
       if (this.image.predictions === undefined) {
         return []
@@ -70,9 +67,11 @@ export default {
           top: convertToCssPercentage(prediction.top / height),
           width: convertToCssPercentage((prediction.right - prediction.left) / width),
           height: convertToCssPercentage((prediction.bottom - prediction.top) / height),
+          'font-size': this.predictionFontSize,
+          'border-width': this.predictionBoxWidth + "px"
         }
         const text = `${prediction.category} (${prediction.probability})`
-        return { style, text, predictionId: prediction.predictionId }
+        return { style, text, predictionId: prediction.predictionId, probability: prediction.probability }
       })
     },
   },
@@ -91,6 +90,7 @@ export default {
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.5s;
   animation: backdrop 1000ms;
+  cursor: pointer;
 }
 
 .overlay {
@@ -142,5 +142,10 @@ div.full-screen-dialog {
   justify-content: center;
   flex-direction: column;
   height: calc(100vh - 64px);
+}
+
+.top-margin {
+  margin-top: 64px !important;
+  z-index:250 !important;
 }
 </style>
