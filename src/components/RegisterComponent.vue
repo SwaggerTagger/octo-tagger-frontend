@@ -84,7 +84,7 @@ export default {
       return this.loggedIn.is
     },
     ...mapState([
-      'registered', 'loggedIn'
+      'registered', 'loggedIn',
     ]),
   },
   components: { VideoDialog },

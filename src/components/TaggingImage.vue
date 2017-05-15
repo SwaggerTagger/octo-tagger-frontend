@@ -62,24 +62,25 @@ export default {
         params: { image: this.image, id: this.image.imageId } })
     },
     group(predictions) {
-      let grouped = {}, shown = []
-      predictions.forEach(p => {
+      let grouped = {},
+        shown = []
+      predictions.forEach((p) => {
         if (p.category in grouped) {
           grouped[p.category] += 1
         } else {
           grouped[p.category] = 1
         }
       })
-      for (let name in grouped) {
-        shown.push({ category: grouped[name] === 1 ? name: name + " x" + grouped[name]})
+      for (const name in grouped) {
+        shown.push({ category: grouped[name] === 1 ? name : `${name} x${grouped[name]}` })
       }
-    return shown;
+      return shown
     },
     filterMatchPart(tag) {
       const f = this.getFilterText()
-      const p = tag.startsWith(f) ? tag.slice(0, f.length) : ""
+      const p = tag.startsWith(f) ? tag.slice(0, f.length) : ''
       return p
-    }, 
+    },
     filterRest(tag) {
       const f = this.getFilterText()
       return tag.startsWith(f) ? tag.slice(f.length) : tag
@@ -88,9 +89,9 @@ export default {
   },
   computed: {
     filterApplied() {
-      return this.$store.state.filterText !== ""
+      return this.$store.state.filterText !== ''
     },
-  }
+  },
 }
 </script>
 

@@ -115,16 +115,16 @@ export default {
   },
   computed: {
     prettyName() {
-      return this.getLogin().body.fullName;
+      return this.getLogin().body.fullName
     },
 
     onDashboard() {
-      return this.$route.name === "Dashboard"
+      return this.$route.name === 'Dashboard'
     },
 
     ...mapState({
-      filterText: state => state.filterText
-    })
+      filterText: state => state.filterText,
+    }),
 
   },
   mounted() {
@@ -140,7 +140,7 @@ export default {
   },
   components: {
     settings: Settings,
-    sessionExpired: SessionExpired
+    sessionExpired: SessionExpired,
   },
 }
 </script>

@@ -57,7 +57,7 @@ export default new Router({
     {
       path: '/session-expired',
       component: SessionExpiredComponent,
-      name: 'SessionExpiredComponent'
-    }
+      name: 'SessionExpiredComponent',
+    },
   ],
 })

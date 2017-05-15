@@ -51,15 +51,15 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'billing',
   data: () => ({
-    totalCost: 0
+    totalCost: 0,
   }),
   methods: {
     ...mapGetters(['getImages']),
 
     toState(duration) {
-        return duration? 
+      return duration ?
             'completed'
-          : 'pending';
+          : 'pending'
     },
 
     toCostRaw(duration) {
@@ -72,35 +72,31 @@ export default {
 
     onSelect(selections) {
       this.$data.totalCost = 0
-      for (var key in selections) {
+      for (const key in selections) {
         this.$data.totalCost += this.toCostRaw(selections[key].classificationDuration)
       }
       this.$data.totalCost = this.$data.totalCost.toFixed(3)
-    }
+    },
   },
   computed: {
     images() {
-        const arr = [];
-        this.getImages().forEach(x => arr.push(((
-            ({filename, classificationStart, classificationDuration, url}) => {
-                return {
-                    filename, 
-                    state: this.toState(classificationDuration),
-                    classificationStart,
-                    classificationDuration: Math.round(classificationDuration / 1000),
-                    cost: this.toCost(classificationDuration)
-               }
-            })(x)
+      const arr = []
+      this.getImages().forEach(x => arr.push(((
+            ({ filename, classificationStart, classificationDuration, url }) => ({
+              filename,
+              state: this.toState(classificationDuration),
+              classificationStart,
+              classificationDuration: Math.round(classificationDuration / 1000),
+              cost: this.toCost(classificationDuration),
+            }))(x)
         )))
-        console.log(arr);
-        return arr;
-    }
+      console.log(arr)
+      return arr
+    },
   },
 }
 </script>
 
 <style>
 </style>
-
-
 

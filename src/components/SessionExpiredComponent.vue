@@ -18,7 +18,7 @@ import LoginComponent from './LoginComponent'
 export default {
   name: 'session-expired',
   mounted() {
-      setTimeout( () => this.open(), 0  )
+    setTimeout(() => this.open(), 0)
   },
   methods: {
     open() {
@@ -28,6 +28,6 @@ export default {
       this.$refs.sessionExpiredDialog.close()
     },
   },
-  components: { LoginComponent }
+  components: { LoginComponent },
 }
 </script>
