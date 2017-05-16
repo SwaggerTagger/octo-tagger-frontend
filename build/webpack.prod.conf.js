@@ -8,7 +8,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-
+var FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 var env = config.build.env
 
 var webpackConfig = merge(baseWebpackConfig, {
@@ -46,6 +46,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         safe: true
       }
     }),
+    new FaviconsWebpackPlugin('./logo.png'),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
