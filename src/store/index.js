@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import createPersist, { createStorage } from 'vuex-localstorage'
+import createPersist from 'vuex-localstorage'
 import MockApi from '@/utils/mockApi'
 import Poller from '@/utils/poller'
 import { ApiMutations, ApiActions } from '@/utils/api'

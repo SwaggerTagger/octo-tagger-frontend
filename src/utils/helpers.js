@@ -1,3 +1,12 @@
+export function intoRange(min, val, max) {
+  if (val < min) {
+    return min
+  } else if (val > max) {
+    return max
+  }
+  return val
+}
+
 export function convertToCssPercentage(percentage) {
   return `${Math.floor(percentage * 100)}%`
 }
@@ -9,6 +18,7 @@ export function randomString(length) {
   }
   return text
 }
+
 
 export const statusStringMap = {
   CLASSIFICATION_STARTING: 'Classifying...',

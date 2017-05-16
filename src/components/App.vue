@@ -119,7 +119,7 @@ export default {
     },
 
     onDashboard() {
-      return this.$route.name === 'Dashboard'
+      return this.$route.name === 'Dashboard' || this.$route.name === 'FullScreenComponent'
     },
 
     ...mapState({

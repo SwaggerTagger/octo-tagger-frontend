@@ -16,7 +16,7 @@
     <md-card-header>
       <div class="md-title break">{{image.filename}}</div>
       <div class="md-subhead">Uploaded: {{ image.uploadedAt | moment("dddd, MMMM Do YYYY HH:mm") }}</div>
-      <div v-if="image.classificationStart">Tagged: {{ image.classificationStart | moment("dddd, MMMM Do YYYY") }}</div>
+      <div v-if="image.classificationStart">Classification started: {{ image.classificationStart | moment("dddd, MMMM Do YYYY  HH:mm") }}</div>
       <div v-if="image.classificationDuration">Duration: {{ image.classificationDuration / 1000 }}s</div>
     </md-card-header>
     <div v-if="image.predictions" class="buffer">

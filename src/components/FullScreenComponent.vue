@@ -2,13 +2,17 @@
   <div class="full-screen-component">
     <div class="blur-overlay" @click="closeDialog">
     </div>
-      <router-link to="/dashboard">
-        <md-button ref="closeLink" class="md-fab md-primary md-fab-top-right top-margin">
+
+    <div class="valigner">
+     <div class="full-screen-dialog">
+            <div @click="closeDialog">
+            <router-link to="/dashboard">
+        <md-button ref="closeLink" class="md-fab md-primary">
           <md-icon class="white">close</md-icon>
         </md-button>
       </router-link>
-    <div class="valigner">
-      <md-whiteframe @click.native="handleDialogClick" md-elevation="15" class="full-screen-dialog">
+      </div>
+      <md-whiteframe @click.native="handleDialogClick" md-elevation="15" >
         <div 
           class="overlay-container">
           <div class="overlay" 
@@ -24,11 +28,12 @@
         
       </md-whiteframe>
     </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { convertToCssPercentage } from '@/utils/helpers'
+import { convertToCssPercentage, intoRange } from '@/utils/helpers'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -62,11 +67,15 @@ export default {
       }
       const { width, height } = this.image
       return this.image.predictions.map((prediction) => {
+        let left = intoRange(0,prediction.left,width)
+        let right = intoRange(0,prediction.right,width)
+        let top = intoRange(0,prediction.top,height)
+        let bottom = intoRange(0,prediction.bottom,height)
         const style = {
-          left: convertToCssPercentage(prediction.left / width),
-          top: convertToCssPercentage(prediction.top / height),
-          width: convertToCssPercentage((prediction.right - prediction.left) / width),
-          height: convertToCssPercentage((prediction.bottom - prediction.top) / height),
+          left: convertToCssPercentage(left / width),
+          top: convertToCssPercentage(top / height),
+          width: convertToCssPercentage((right - left) / width),
+          height: convertToCssPercentage((bottom - top) / height),
           'font-size': this.predictionFontSize,
           'border-width': `${this.predictionBoxWidth}px`,
         }
@@ -129,7 +138,6 @@ export default {
 div.full-screen-dialog {
   position: fixed;
   z-index: 5;
-  background: white;
 }
 
 .white {
