@@ -14,7 +14,7 @@
     </md-card-media>
     <md-card-area class="img-area">
     <md-card-header>
-      <div class="md-title">{{file.file.name}}</div>
+      <div class="md-title break">{{file.file.name}}</div>
       <div class="md-subhead">Size: {{humanFileSize}}</div>
     </md-card-header>
     <div class="buffer" />

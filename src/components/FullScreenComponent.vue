@@ -2,17 +2,15 @@
   <div class="full-screen-component">
     <div class="blur-overlay" @click="closeDialog">
     </div>
-
-    <div class="valigner">
-     <div class="full-screen-dialog">
-            <div @click="closeDialog">
-            <router-link to="/dashboard">
-        <md-button ref="closeLink" class="md-fab md-primary">
+      <div style="display:none">
+      <router-link to="/dashboard">
+        <md-button ref="closeLink" class="md-fab md-primary md-fab-top-right top-margin">
           <md-icon class="white">close</md-icon>
         </md-button>
       </router-link>
       </div>
-      <md-whiteframe @click.native="handleDialogClick" md-elevation="15" >
+    <div class="valigner">
+      <md-whiteframe @click.native="handleDialogClick" md-elevation="15" class="full-screen-dialog">
         <div 
           class="overlay-container">
           <div class="overlay" 
