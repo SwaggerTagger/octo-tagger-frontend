@@ -102,9 +102,6 @@ const mutations = {
   setPollingInterval(state, seconds) {
     state.pollingInterval = seconds
   },
-  setPollingMethod(state, useLegacy) {
-    state.pollingMethod = useLegacy
-  },
   setUploadDataUrl(state, { file, dataUri }) {
     Vue.set(file, 'dataUrl', dataUri)
   },
@@ -205,7 +202,7 @@ const actions = {
     dispatch('startPolling')
   },
   setPollingMethod({ commit, dispatch }, useLegacy) {
-    commit('setPollingMethod', useLegacy)
+    commit('setLegacyPolling', useLegacy)
     dispatch('startPolling')
   },
   startPolling({ state, dispatch, commit }) {

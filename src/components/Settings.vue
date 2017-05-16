@@ -6,22 +6,25 @@
       <md-subheader>Backend Connectivity</md-subheader>
       <md-divider></md-divider>
       <div class="margin-top">
-      <md-switch v-model="useLegacy" class="md-primary">Use Legacy Polling (instead of SSE)</md-switch>
+      <md-switch v-model="useLegacyValue" @change="setLegacy" class="md-primary">Use Polling (instead of SSE)</md-switch>
+      </div>
+
+      <div>
       <label class="label">Polling Interval in seconds: <span class="val-display">{{pollingInterval}} secs</span></label>
-        <vue-slider v-model="pollingInterval" tooltip="never" 
-              class="slider" :min="3" :max="10" :height="2" :bgStyle="sliderStyle" />
+      <vue-slider v-model="pollingInterval" tooltip="never" :disabled="!useLegacyValue"
+            class="slider" :min="3" :max="30" :height="2" />
       </div>
       <md-subheader>Functionality</md-subheader>
       <md-divider></md-divider>
         <label class="label">Prediction Confidence Threshold: <span class="val-display">{{predictionConfidence}}%</span></label>
         <vue-slider v-model="predictionConfidence" tooltip="never" 
-              class="slider" :min="1" :max="100" :height="2" :bgStyle="sliderStyle" />
+              class="slider" :min="1" :max="100" :height="2" />
         
       <md-subheader>Appearance</md-subheader>
       <md-divider></md-divider>
       <label class="label">Prediction Box Size: <span class="val-display">{{boxWidth}}px</span></label>
       <vue-slider v-model="boxWidth" tooltip="never" 
-            class="slider" :min="1" :max="10" :height="2" :bgStyle="sliderStyle" />
+            class="slider" :min="1" :max="10" :height="2" />
       <md-input-container>
         <label>Prediction Font Size: </label>
           <md-select v-model="fontSize">
@@ -39,7 +42,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 import vueSlider from 'vue-slider-component'
 
 export default {
@@ -48,8 +51,7 @@ export default {
   data() {
     return {
       wrongInterval: false,
-      sliderStyle: {
-      }
+      useLegacyValue: this.useLegacyPoll,
     }
   },
   methods: {
@@ -59,22 +61,19 @@ export default {
     close() {
       this.$refs.settingsDialog.close()
     },
+    setLegacy() {
+      this.$store.dispatch('setPollingMethod', !this.useLegacyPoll)
+    },
   },
   computed: {
-    ...mapGetters({ pInterval: 'getPollingInterval', 
-    predictionFontSize: 'getPredictionFontSize',
-    pConfidence: 'getPredictionConfidence',
-    predictionBoxWidth: 'getPredictionBoxWidth',
-    useLegacyPoll:'getUseLegacy'}),
+    ...mapGetters({ 
+      pInterval: 'getPollingInterval', 
+      predictionFontSize: 'getPredictionFontSize',
+      pConfidence: 'getPredictionConfidence',
+      predictionBoxWidth: 'getPredictionBoxWidth',
+      useLegacyPoll:'getUseLegacy'
+    }),
 
-    useLegacy: {
-      get() {
-        return this.useLegacyPoll
-      },
-      set(value) {
-        this.$store.dispatch('setPollingMethod',value)
-      }
-    },
     pollingInterval: {
       get() {
         return this.pInterval
