@@ -55,11 +55,12 @@
             <p>Billing</p>
           </router-link>
         </md-list-item>
-        <md-list-item>
-          <router-link to="/about">
+        <md-list-item href="https://swaggertagger.github.io/impress.js">
+          <!---<router-link to="/about">
             <md-icon>info</md-icon>
             <p>About</p>
-          </router-link>
+          </router-link>-->
+          <p>About</p>
         </md-list-item>
         <md-subheader>Login</md-subheader>
         <md-list-item>
