@@ -1,5 +1,5 @@
 <template>
-  <md-card md-with-hover class="tagging-image-container">
+  <md-card md-with-hover class="tagging-image-container uploading-file">
     <md-card-media-cover >
     <md-card-media @click.native="openFullScreen">
       <aspect-ratio>
@@ -53,3 +53,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.uploading-file {
+  cursor: initial !important;
+}
+</style>

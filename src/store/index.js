@@ -78,7 +78,11 @@ const mutations = {
   },
   updateImage(state, image) {
     const index = state.images.findIndex(e => image.imageId === e.imageId)
-    Vue.set(state.images, index, image)
+    if (index >= 0) {
+      Vue.set(state.images, index, image)
+    } else {
+      mutations.addImage(state, image)
+    }
   },
   deleteImage(state, imageId) {
     state.images = state.images.filter(value => imageId !== value.imageId)
