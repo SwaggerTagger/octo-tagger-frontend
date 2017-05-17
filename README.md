@@ -10,7 +10,7 @@ This Frontend is using the following (notable) technologies:
 
 ## Deployment
 ### Nginx
-This repository contains a `[Dockerfile](https://github.com/SwaggerTagger/octo-tagger-frontend/blob/master/Dockerfile)`, as well as a `[nginx configuration](https://github.com/SwaggerTagger/octo-tagger-frontend/blob/master/deploy/nginx.conf)`, that builds an SSL-Enabled Docker container that serves this project as static HTML and provides a reverse proxy connection to the Backend. You can use `push.sh` at the root of the repository to push modifications of the frontend to our Container Registry.
+This repository contains a [`Dockerfile`](https://github.com/SwaggerTagger/octo-tagger-frontend/blob/master/Dockerfile), as well as a [`NGINX configuration`](https://github.com/SwaggerTagger/octo-tagger-frontend/blob/master/deploy/nginx.conf), that builds an SSL-Enabled Docker container that serves this project as static HTML and provides a reverse proxy connection to the Backend. You can use `push.sh` at the root of the repository to push modifications of the frontend to our Container Registry.
 ### (re-)deploying to Kubernetes
 Together with [tagger-kubernetes](https://github.com/SwaggerTagger/tagger-kubernetes), here's how you deploy the frontend to your cluster using one shell command:
 
